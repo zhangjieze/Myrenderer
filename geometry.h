@@ -145,3 +145,49 @@ inline Vec4 normalized_xyz(const Vec4& a) {
     double len = norm(xyz(a));
     return {a.x / len,a.y / len,a.z / len,a.w};
 }
+
+
+
+//Mat4 struct
+struct Mat4 {
+    double m[4][4] = {{0.0,0.0,0.0,0.0}, {0.0,0.0,0.0,0.0}, {0.0,0.0,0.0,0.0}, {0.0,0.0,0.0,0.0}};
+
+    friend inline Vec4 operator*(const Mat4& a, const Vec4& b) {
+        double res[4];
+        for (int i = 0 ; i < 4 ;++i){
+            res[i] = a.m[i][0] * b.x + a.m[i][1] * b.y + a.m[i][2] * b.z + a.m[i][3] * b.w;
+        }
+        return Vec4{res[0],res[1],res[2],res[3]};
+    }
+
+    friend Mat4 operator*(const Mat4& a, const Mat4& b) {
+        Mat4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    result.m[i][j] += a.m[i][k] * b.m[k][j];
+                }
+            }
+        }
+        return result;
+    }
+};
+
+inline Mat4 identity(){
+    return Mat4{{{1.0,0.0,0.0,0.0}, {0.0,1.0,0.0,0.0}, {0.0,0.0,1.0,0.0}, {0.0,0.0,0.0,1.0}}};
+}
+
+
+
+//viewport NDC-> 屏幕坐标
+//z轴在视野进入屏幕这一维度，方便后面做z-buffer
+inline Mat4 viewport(int width,int height){
+    Mat4 vp = identity();
+    vp.m[0][0] = width / 2.0;
+    vp.m[0][3] = width / 2.0;
+
+    vp.m[1][1] = height / 2.0;
+    vp.m[1][3] = height / 2.0;
+
+    return vp;
+}
