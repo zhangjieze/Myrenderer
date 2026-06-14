@@ -10,7 +10,8 @@
 # day2
 1. 补足geometry.h的Mat4部分，实现矩阵乘向量和矩阵相乘的基本代数运算
 2. 实现Viewport Matrix，把NDC坐标映射到屏幕坐标
-    NDC坐标:设备归一化坐标，OpenGL为[-1,1],映射回原屏幕坐标为:
+    
+    NDC坐标:设备归一化坐标，OpenGL为[-1,1],Direct3D为[0,1],这里采用OpenGL标准,映射回原屏幕坐标为:
     screen_x = (ndc_x + 1.0) * width / 2.0;
     screen_y = (ndc_y + 1.0) * height / 2.0;
     z和w需保持不变
