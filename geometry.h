@@ -191,3 +191,15 @@ inline Mat4 viewport(int width,int height){
 
     return vp;
 }
+
+
+
+//平移
+inline Mat4 translation(double tx,double ty,double tz){
+    Mat4 tr = identity();
+    tr.m[0][3] = tx;
+    tr.m[1][3] = ty;
+    tr.m[2][3] = tz;
+
+    return tr;
+}
