@@ -203,3 +203,13 @@ inline Mat4 translation(double tx,double ty,double tz){
 
     return tr;
 }
+
+//scale放缩
+inline Mat4 scale(double sx,double sy,double sz){
+    Mat4 sc = identity();
+    sc.m[0][0] = sx;
+    sc.m[1][1] = sy;
+    sc.m[2][2] = sz;
+
+    return sc;
+}
