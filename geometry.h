@@ -213,3 +213,45 @@ inline Mat4 scale(double sx,double sy,double sz){
 
     return sc;
 }
+
+
+//旋转，绕z轴逆时针旋转
+inline Mat4 rotation_z(double angle){
+    Mat4 rz = identity();
+    double c = std::cos(angle);
+    double s = std::sin(angle);
+
+    rz.m[0][0] = c;
+    rz.m[0][1] = -s;
+    rz.m[1][0] = s;
+    rz.m[1][1] = c;
+
+    return rz;
+}
+
+//绕y轴，这里使用右手系,所以sin符号需要变
+inline Mat4 rotation_y(double angle){
+    Mat4 ry = identity();
+    double c = std::cos(angle);
+    double s = std::sin(angle);
+
+    ry.m[0][0] = c;
+    ry.m[0][2] = s;
+    ry.m[2][0] = -s;
+    ry.m[2][2] = c;
+
+    return ry;
+}
+//绕x轴
+inline Mat4 rotation_x(double angle){
+    Mat4 rx = identity();
+    double c = std::cos(angle);
+    double s = std::sin(angle);
+
+    rx.m[1][1] = c;
+    rx.m[1][2] = -s;
+    rx.m[2][1] = s;
+    rx.m[2][2] = c;
+
+    return rx;
+}
