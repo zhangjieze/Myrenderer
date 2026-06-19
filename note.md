@@ -43,3 +43,27 @@ non-uniform scale：改变点的位置，也可能改变差向量方向
     [ 0     0    0    1 ]
 
 2. 理解变换组合逻辑:顺序其实就是左边的变换矩阵对列向量做的空间的仿射变换,仿射变换的顺序直接对仿射变换的结果影响
+
+
+# day6
+1. 实现tgaimage.h接口,包含TGAColor结构体和TGAImage类
+
+2. 实现tgaimage.cpp,包含对TGAImage的具体实现:
+    特别是set的实现
+    - 通过坐标(x,y)找到pixel在pixels数组中的存储位置并进行初始化,std::size_t表示无符号数,它的位数大小取决于当前的操作系统和编译器,可以有效防止在分辨率过大时,y*width_的溢出问题
+    - static_cast是cpp中显式强制类型转换,更安全
+
+3. 实现TGAImage::write,其中:
+    |> 头文件信息
+    - TGA 格式的官方规范规定，文件开头的 18 个字节必须用来存储图像的元数据,同时width和height的高度限制由于TGA的2字节(16bit)存储字段,故高度和宽度只能达到65535
+    - header[2] = 2;：根据 TGA 规范，值 2 代表这是一张“未压缩的真彩色图像（Uncompressed, true-color image）”
+    - header[16] = 24;：代表每像素占用 24 位(即 3 个通道 3 x 8 = 24 bit)
+    - 因为 width_ 和 height_ 是32 位的整数（占 4 字节），但 TGA 头文件里只给宽度分配了 2 个字节的空间（第 12 和 13 字节），且要求以**小端序（即低位字节在前，高位字节在后）**写入,故先通过按位与操作取出低8位存入12,在右移8位取出新的低8位
+
+    |> 输出流
+    - std::ofstream是 C++ 中的“输出文件流”，专门用于向文件中写入数据
+    - std::ios::binary是文件打开格式，关闭一切自动转换，而一般文件打开是用的文本格式，这样文件可能会被系统改变
+    - 这里的output.write函数原型是: ostream& write(const char* s, std::streamsize count);
+    - 但是传入的数据是std::uint8_t,因此 header.data() 返回的是 const uint8_t* 类型的指针。但是，C++ 历史遗留的文件写入函数 write() 只接受 const char*（有符号字符）指针,故使用reinterpret_cast<const char*>(重新解释类型转换),不用做任何实质性的数据转换，直接把这个 uint8_t* 指针当成 char* 指针来用
+    - header.size() 返回的是 std::size_t 类型,而 write 函数需要的长度参数类型是 std::streamsize（标准库定义的一种有符号整型）,为了防止编译器报“有符号/无符号类型不匹配”的警告，这里使用 static_cast 进行了一次类型转换
+    - good() 是文件流的一个状态检查函数。如果整个写入过程中没有发生任何硬件或系统错误，它会返回 true，代表文件保存成功
