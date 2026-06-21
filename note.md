@@ -67,3 +67,7 @@ non-uniform scale：改变点的位置，也可能改变差向量方向
     - 但是传入的数据是std::uint8_t,因此 header.data() 返回的是 const uint8_t* 类型的指针。但是，C++ 历史遗留的文件写入函数 write() 只接受 const char*（有符号字符）指针,故使用reinterpret_cast<const char*>(重新解释类型转换),不用做任何实质性的数据转换，直接把这个 uint8_t* 指针当成 char* 指针来用
     - header.size() 返回的是 std::size_t 类型,而 write 函数需要的长度参数类型是 std::streamsize（标准库定义的一种有符号整型）,为了防止编译器报“有符号/无符号类型不匹配”的警告，这里使用 static_cast 进行了一次类型转换
     - good() 是文件流的一个状态检查函数。如果整个写入过程中没有发生任何硬件或系统错误，它会返回 true，代表文件保存成功
+
+
+# day7
+使用tga底层文件实现画点,输出test1.tga
