@@ -2,8 +2,6 @@
 #include <cstdint>
 #include <fstream>
 #include <array>
-#include <cmath>
-#include <algorithm>
 
 TGAImage::TGAImage(int width,int height)
     : width_(width),height_(height),pixels_(width * height*3,0){}

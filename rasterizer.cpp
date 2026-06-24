@@ -1,5 +1,6 @@
 #include "rasterizer.h"
 #include <cmath>
+#include <algorithm>
 
 //DDA算法实现直线绘制
 void line(int x0, int y0, int x1, int y1,TGAImage& image, const TGAColor& color){
