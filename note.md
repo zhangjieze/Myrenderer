@@ -79,3 +79,6 @@ non-uniform scale：改变点的位置，也可能改变差向量方向
 
 tips:
 - inline函数的完整定义必须在每个使用它的翻译单元中可见,所以一般是直接定义,而如果是普通函数，则使用.h:声明 .cpp:实现的方式
+
+# day9
+创建rasterizer.h和rasterizer.cpp,line不属于tgaimage的范畴.rasterizer用于实现光栅化算法
