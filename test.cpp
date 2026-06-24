@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tgaimage.h"
+#include "rasterizer.h"
 
 int main(){
     TGAColor red{0,0,255};
