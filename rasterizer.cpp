@@ -3,7 +3,7 @@
 #include <algorithm>
 
 //DDA算法实现直线绘制
-void line(int x0, int y0, int x1, int y1,TGAImage& image, const TGAColor& color){
+void line_dda(int x0, int y0, int x1, int y1,TGAImage& image, const TGAColor& color){
     int dx = x1 - x0;
     int dy = y1 - y0;
     int steps = std::max(std::abs(dx), std::abs(dy));
@@ -16,5 +16,22 @@ void line(int x0, int y0, int x1, int y1,TGAImage& image, const TGAColor& color)
         int x = x0 + static_cast<int>(std::round(dx * t));
         int y = y0 + static_cast<int>(std::round(dy * t));
         image.set(x, y, color);
+    }
+}
+
+//bresenham
+void line_bresenham(int x0, int y0, int x1, int y1, TGAImage &image, const TGAColor &color){
+    int dx = x1 - x0;
+    int dy = y1 - y0;
+    int error = 0;
+    int y = y0;
+    for (int x = x0 ; x <= x1;++x){
+        image.set(x,y,color);
+
+        error += dy;
+        if (2 * error >= dx){
+            y++;
+            error -= dx;
+        }
     }
 }

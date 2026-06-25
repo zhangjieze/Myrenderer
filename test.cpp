@@ -8,13 +8,8 @@ int main(){
     TGAColor blue{255,0,0};
     TGAColor green{0,255,0};
 
-    line(10, 10, 90, 10, image, red);    // 水平
-    line(10, 10, 10, 90, image, green);  // 垂直
-    line(10, 10, 90, 60, image, blue);   // 低斜率
-    line(10, 10, 40, 90, image, red);    // 高斜率
-    line(90, 90, 10, 20, image, green);  // 反向
-    line(50, 50, 50, 50, image, blue);   // 单点
+    line_bresenham(10,10,90,60,image,red);
 
-    image.write("ddatest.tga");
+    image.write("bresenham1.tga");
     return 0;
 }
