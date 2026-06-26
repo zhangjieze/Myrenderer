@@ -40,7 +40,7 @@ void line_bresenham(int x0, int y0, int x1, int y1, TGAImage &image, const TGACo
     //处理负斜率问题,负斜率的时候相当于y往下走,用一个ystep保存y需要走的间隔
     int ystep = 1;
     if (dy < 0){
-        dy *= -1;
+        dy = -dy;
         ystep = -1;
     }
 
