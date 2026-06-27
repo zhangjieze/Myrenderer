@@ -58,3 +58,10 @@ void line_bresenham(int x0, int y0, int x1, int y1, TGAImage &image, const TGACo
         }
     }
 }
+
+//三角形轮廓
+void triangle_wireframe(int x0,int y0,int x1,int y1,int x2,int y2,TGAImage& image,const TGAColor& color){
+    line_bresenham(x0, y0, x1, y1, image, color);
+    line_bresenham(x1, y1, x2, y2, image, color);
+    line_bresenham(x2, y2, x0, y0, image, color);
+}
