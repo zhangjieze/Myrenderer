@@ -104,7 +104,7 @@ void triangle_filled(int x0,int y0,int x1,int y1,int x2,int y2,TGAImage& image,c
     }
 
     if (y1 != y2){
-        for (int y = y1; y <= y2;++y){
+        for (int y = y1 + 1; y <= y2;++y){ //从y1 + 1开始,y1只需要画一次
             double t1 = (y - y1) / static_cast<double>(y2 - y1);
             int xa = x1 + (x2 - x1) * t1;
 
