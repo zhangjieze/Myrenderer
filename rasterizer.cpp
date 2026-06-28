@@ -65,3 +65,59 @@ void triangle_wireframe(int x0,int y0,int x1,int y1,int x2,int y2,TGAImage& imag
     line_bresenham(x1, y1, x2, y2, image, color);
     line_bresenham(x2, y2, x0, y0, image, color);
 }
+
+
+
+//三角形填充
+void triangle_filled(int x0,int y0,int x1,int y1,int x2,int y2,TGAImage& image,const TGAColor& color){
+    //采用普通的填充法,保持y0 <= y1 <= y2
+    if (y0 > y1) {
+        std::swap(x0,x1);
+        std::swap(y0,y1);
+    }
+    if (y0 > y2){
+        std::swap(x0,x2);
+        std::swap(y0,y2);
+    }
+    if (y1 > y2){
+        std::swap(x1,x2);
+        std::swap(y1,y2);
+    }
+
+    if (y0 == y2) return;
+
+    if (y0 != y1){
+        for (int y = y0; y <= y1;++y){
+            double t1 = (y - y0) / static_cast<double>(y2 - y0);
+            int xa = x0 + (x2 - x0) * t1;
+
+            double t2 = (y - y0) / static_cast<double>(y1 - y0);
+            int xb = x0 + (x1 - x0) * t2;
+
+            //水平线不需要使用line函数,直接实现即可
+            if (xa > xb) std::swap(xa,xb);
+            for (int x = xa; x <= xb;++x){
+                image.set(x,y,color);
+            }
+            
+        }
+    }
+
+    if (y1 != y2){
+        for (int y = y1; y <= y2;++y){
+            double t1 = (y - y1) / static_cast<double>(y2 - y1);
+            int xa = x1 + (x2 - x1) * t1;
+
+            double t2 = (y - y0) / static_cast<double>(y2 - y0);
+            int xb = x0 + (x2 - x0) * t2;
+
+            if (xa > xb) std::swap(xa,xb);
+            for (int x = xa; x <= xb;++x){
+                image.set(x,y,color);
+            }
+        }
+    }
+
+}
+
+
