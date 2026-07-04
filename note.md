@@ -124,3 +124,42 @@ Bresenham算法的完善,处理3个问题,`x0 < x1 如何修复? 负斜率如何
 # day13
 - 实现扫描线填充方式
 需要注意的是在划水平线的过程中不要直接调用line_bresenham,直接水平画线会更高效
+
+
+# day 14
+不再按扫描线找左右边界,而是在三角形包围盒里逐像素判断:这个像素是否在三角形内部
+三角形的3个顶点分别为A,B,C,如果P = alpha * A + beta * B + gamma * C,且alpha + beta + gamma = 1,则称 alpha, beta, gamma 就是 P 关于三角形 ABC 的重心坐标。
+
+- `barycentric`实现找一个点关于某个三角形的重心坐标,数学原理为克莱姆法则求解二元方程: P=αA+βB+(1−α−β)C , 则 P−C=α(A−C)+β(B−C)
+重心坐标十分重要,很多属性都可以使用重心坐标进行插值得到:
+```bash
+z = z0 * bc.x + z1 * bc.y + z2 * bc.z;
+uv = uv0 * bc.x + uv1 * bc.y + uv2 * bc.z;
+normal = n0 * bc.x + n1 * bc.y + n2 * bc.z;
+```
+
+- 实现`triangle_barycentric_filled`,使用包围盒,判断包围盒内的点重心坐标是否均大于等于0
+
+## 实现思路：
+ - 求三角形包围盒
+ - 遍历包围盒里的每个像素
+ - 算当前像素点的重心坐标
+ - 如果三个权重都非负，就染色
+
+- 测试得到triangle_barycentric.tga
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
