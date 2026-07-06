@@ -150,6 +150,15 @@ normal = n0 * bc.x + n1 * bc.y + n2 * bc.z;
 
 
 
+# day15
+> 重心坐标应用-颜色插值
+- 三角形颜色插值,不过因为没有重载TGAColor的\*运算,所以需要定义一个辅助函数(`to_byte`)实现TGAColor的插值
+- 定义新函数`triangle_barycentric_gradient`,在位置插值的基础上增加颜色插值
+
+测试得到效果为triangle_barycentric_color_gradient.tga文件,很明显可以看到越靠近顶点的像素对应这个顶点的颜色越深
+
+
+
 
 
 

@@ -126,7 +126,7 @@ void triangle_filled(int x0,int y0,int x1,int y1,int x2,int y2,TGAImage& image,c
 //找重心坐标,克莱姆法则
 Vec3 barycentric(const Vec2& a, const Vec2& b, const Vec2& c, const Vec2& p){
     double denom = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
-    if (std::abs(denom) < 1e-8) return Vec3{-1,1,1};
+    if (std::abs(denom) < 1e-8) return Vec3{-1,-1,-1};
     double alpha = ((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / denom;
     double beta = ((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / denom;
     double gamma = 1 - alpha - beta;
@@ -156,6 +156,41 @@ void triangle_barycentric_filled(const Vec2& a,const Vec2& b,const Vec2& c,TGAIm
     }
 }
 
+
+
+//定义辅助函数,实现TGAColor的插值
+inline std::uint8_t to_byte(double v){
+    v = std::max(0.0,std::min(255.0,v)); //控制在rgb范围内
+    return static_cast<std::uint8_t>(v + 0.5);
+}
+
+//实现颜色插值
+void triangle_barycentric_gradient(const Vec2& a,const Vec2& b,const Vec2& c,const TGAColor& ca,const TGAColor& cb,const TGAColor& cc,TGAImage& image){
+    //求包围盒
+    int min_x = static_cast<int>(std::floor(std::min({a.x, b.x, c.x})));
+    int max_x = static_cast<int>(std::ceil (std::max({a.x, b.x, c.x})));
+    int min_y = static_cast<int>(std::floor(std::min({a.y, b.y, c.y})));
+    int max_y = static_cast<int>(std::ceil (std::max({a.y, b.y, c.y})));
+    //防止越界
+    min_x = std::max(min_x, 0);
+    min_y =std::max(min_y, 0);
+    max_x = std::min(max_x, image.width() - 1);
+    max_y = std::min(max_y, image.height() - 1);
+    //遍历包围盒
+    for (int y = min_y; y <= max_y;++y){
+        for (int x = min_x; x <= max_x;++x){
+            Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
+            Vec3 bc = barycentric(a,b,c,p);
+            if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            TGAColor mixed;
+            mixed.r = to_byte(ca.r * bc.x + cb.r * bc.y + cc.r * bc.z);
+            mixed.g = to_byte(ca.g * bc.x + cb.g * bc.y + cc.g * bc.z);
+            mixed.b = to_byte(ca.b * bc.x + cb.b * bc.y + cc.b * bc.z);
+            image.set(x,y,mixed);
+        }
+    }
+
+}
 
 
 
