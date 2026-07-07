@@ -158,6 +158,11 @@ normal = n0 * bc.x + n1 * bc.y + n2 * bc.z;
 测试得到效果为triangle_barycentric_color_gradient.tga文件,很明显可以看到越靠近顶点的像素对应这个顶点的颜色越深
 
 
+# day16
+> 重心坐标应用-深度插值zbuffer
+- 使用一个vector记录整个image每个像素位置的深度值,规定越**靠近**摄像头的z值越大,zbuffer初始化为负无穷`std::vector<double> zbuffer(width * height, -std::numeric_limits<double>::infinity());`.
+- 函数实现为`triangle_barycentric_depth`, 实现效果为triangle\_barycentric\_depth.tga,红色压住了绿色三角形的一部分,同时绿色也压住了红色三角形的一部分,体现各个位置深度的影响
+
 
 
 
