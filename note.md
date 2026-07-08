@@ -165,9 +165,9 @@ normal = n0 * bc.x + n1 * bc.y + n2 * bc.z;
 
 
 
-
-
-
+# day17
+- 对于包围盒重复代码进行整理,同时rasterizer.h只暴露接口,辅助函数和只在rasterizer.cpp中实现的函数使用namespace隔离
+- barycentric() 现在还放在头文件公开 API 里.它是一个有意义且可能被外部测试复用的数学工具,所以接口还是暴露在外
 
 
 

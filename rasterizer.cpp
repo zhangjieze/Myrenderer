@@ -3,6 +3,54 @@
 #include <algorithm>
 #include <vector>
 
+
+namespace {
+//包围盒抽象 
+struct BoundingBox{
+    int min_x = 0;
+    int max_x = 0;
+    int min_y = 0;
+    int max_y = 0;
+};
+
+//包围盒实现抽象
+BoundingBox triangle_bounding_box(const Vec2& a,const Vec2& b,const Vec2& c,const TGAImage& image){
+    BoundingBox box;
+    //求包围盒
+    box.min_x = static_cast<int>(std::floor(std::min({a.x, b.x, c.x})));
+    box.max_x = static_cast<int>(std::ceil (std::max({a.x, b.x, c.x})));
+    box.min_y = static_cast<int>(std::floor(std::min({a.y, b.y, c.y})));
+    box.max_y = static_cast<int>(std::ceil (std::max({a.y, b.y, c.y})));
+    //防止越界
+    box.min_x = std::max(box.min_x, 0);
+    box.min_y =std::max(box.min_y, 0);
+    box.max_x = std::min(box.max_x, image.width() - 1);
+    box.max_y = std::min(box.max_y, image.height() - 1);
+    return box;
+}
+
+
+//插值颜色的辅助函数
+inline std::uint8_t to_byte(double v) {
+    v = std::max(0.0, std::min(255.0, v));
+    return static_cast<std::uint8_t>(v + 0.5); //由于使用的是double类型,所以需要进行四舍五入,而static_cast是直接截断,所以在v >0时+0.5实现四舍五入
+}
+
+//颜色插值抽象
+TGAColor interpolate_color(const TGAColor& ca,const TGAColor& cb,const TGAColor& cc,const Vec3& bc){
+    TGAColor mixed;
+    mixed.r = to_byte(ca.r * bc.x + cb.r * bc.y + cc.r * bc.z);
+    mixed.g = to_byte(ca.g * bc.x + cb.g * bc.y + cc.g * bc.z);
+    mixed.b = to_byte(ca.b * bc.x + cb.b * bc.y + cc.b * bc.z);
+    return mixed;
+}
+
+}
+
+
+
+
+
 //DDA算法实现直线绘制
 void line_dda(int x0, int y0, int x1, int y1,TGAImage& image, const TGAColor& color){
     int dx = x1 - x0;
@@ -134,21 +182,14 @@ Vec3 barycentric(const Vec2& a, const Vec2& b, const Vec2& c, const Vec2& p){
     return Vec3{alpha,beta,gamma};
 }
 
-//重心坐标填充
+
+//重心坐标填充方式
 void triangle_barycentric_filled(const Vec2& a,const Vec2& b,const Vec2& c,TGAImage& image,const TGAColor& color){
-    //求包围盒
-    int min_x = static_cast<int>(std::floor(std::min({a.x, b.x, c.x})));
-    int max_x = static_cast<int>(std::ceil (std::max({a.x, b.x, c.x})));
-    int min_y = static_cast<int>(std::floor(std::min({a.y, b.y, c.y})));
-    int max_y = static_cast<int>(std::ceil (std::max({a.y, b.y, c.y})));
-    //防止越界
-    min_x = std::max(min_x, 0);
-    min_y = std::max(min_y, 0);
-    max_x = std::min(max_x, image.width() - 1);
-    max_y = std::min(max_y, image.height() - 1);
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
     //遍历包围盒
-    for (int y = min_y; y <= max_y;++y){
-        for (int x = min_x; x <= max_x;++x){
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
             Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
             Vec3 bc = barycentric(a,b,c,p);
             if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
@@ -159,34 +200,17 @@ void triangle_barycentric_filled(const Vec2& a,const Vec2& b,const Vec2& c,TGAIm
 
 
 
-//定义辅助函数,实现TGAColor的插值
-inline std::uint8_t to_byte(double v){
-    v = std::max(0.0,std::min(255.0,v)); //控制在rgb范围内
-    return static_cast<std::uint8_t>(v + 0.5);
-}
-
 //实现颜色插值
 void triangle_barycentric_gradient(const Vec2& a,const Vec2& b,const Vec2& c,const TGAColor& ca,const TGAColor& cb,const TGAColor& cc,TGAImage& image){
-    //求包围盒
-    int min_x = static_cast<int>(std::floor(std::min({a.x, b.x, c.x})));
-    int max_x = static_cast<int>(std::ceil (std::max({a.x, b.x, c.x})));
-    int min_y = static_cast<int>(std::floor(std::min({a.y, b.y, c.y})));
-    int max_y = static_cast<int>(std::ceil (std::max({a.y, b.y, c.y})));
-    //防止越界
-    min_x = std::max(min_x, 0);
-    min_y =std::max(min_y, 0);
-    max_x = std::min(max_x, image.width() - 1);
-    max_y = std::min(max_y, image.height() - 1);
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
     //遍历包围盒
-    for (int y = min_y; y <= max_y;++y){
-        for (int x = min_x; x <= max_x;++x){
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
             Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
             Vec3 bc = barycentric(a,b,c,p);
             if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
-            TGAColor mixed;
-            mixed.r = to_byte(ca.r * bc.x + cb.r * bc.y + cc.r * bc.z);
-            mixed.g = to_byte(ca.g * bc.x + cb.g * bc.y + cc.g * bc.z);
-            mixed.b = to_byte(ca.b * bc.x + cb.b * bc.y + cc.b * bc.z);
+            TGAColor mixed = interpolate_color(ca, cb, cc, bc); //颜色插值
             image.set(x,y,mixed);
         }
     }
@@ -197,19 +221,11 @@ void triangle_barycentric_gradient(const Vec2& a,const Vec2& b,const Vec2& c,con
 
 //深度插值-zbuffer
 void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,TGAImage& image,std::vector<double>& zbuffer,const TGAColor& color){
-    //求包围盒
-    int min_x = static_cast<int>(std::floor(std::min({a.x, b.x, c.x})));
-    int max_x = static_cast<int>(std::ceil (std::max({a.x, b.x, c.x})));
-    int min_y = static_cast<int>(std::floor(std::min({a.y, b.y, c.y})));
-    int max_y = static_cast<int>(std::ceil (std::max({a.y, b.y, c.y})));
-    //防止越界
-    min_x = std::max(min_x, 0);
-    min_y =std::max(min_y, 0);
-    max_x = std::min(max_x, image.width() - 1);
-    max_y = std::min(max_y, image.height() - 1);
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
     //遍历包围盒
-    for (int y = min_y; y <= max_y;++y){
-        for (int x = min_x; x <= max_x;++x){
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
             Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
             Vec3 bc = barycentric(a,b,c,p);
             if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
