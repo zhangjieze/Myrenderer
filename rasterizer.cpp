@@ -240,6 +240,25 @@ void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double
 }
 
 
+//结合深度和颜色插值
+void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec2 &c, double za,double zb,double zc,const TGAColor &ca, const TGAColor &cb, const TGAColor &cc, TGAImage &image,std::vector<double>& zbuffer){
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
+    for (int y = box.min_y;y <= box.max_y;++y){
+        for (int x = box.min_x;x <= box.max_x;++x){
+            Vec2 p{static_cast<double>(x),static_cast<double>(y)};
+            Vec3 bc = barycentric(a,b,c,p);
+            if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            //先进行深度插值
+            double z = za * bc.x + zb * bc.y + zc * bc.z;
+            int index = x + y * image.width();
+            if (z <= zbuffer[index]) continue;
+            zbuffer[index] = z;
+            TGAColor mixed = interpolate_color(ca, cb, cc, bc);
+            image.set(x,y,mixed);
+        }
+    }
+}
 
 
 
