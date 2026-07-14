@@ -175,6 +175,12 @@ normal = n0 * bc.x + n1 * bc.y + n2 * bc.z;
 - 同时现在在函数里面使用的都是vec2,下一步需要把NDC坐标映射为屏幕坐标,提取出xy作为vec2的内容即可,这是从直接的屏幕坐标过渡到图形管线坐标的第一步
 
 
+# day19
+- 实现NDC -> viewport,实现xy()函数提取Vec2
+- 进行`model matrix`尝试,完整的管线顺序为local -> model -> world -> view -> clip -> NDC -> viewport -> screen,viewport 是最后把 NDC 变成屏幕坐标的步骤,所以Model等变换都应该发生在几何空间里,而不是屏幕像素空间里.
+实现代码为Model_Matrix.cpp,tga文件为NDC.tga,实现两种变换,只进行深度插值,可以看出变换顺序带来的差异
+
+
 
 
 

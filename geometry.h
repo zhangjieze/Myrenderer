@@ -137,6 +137,10 @@ inline Vec3 xyz(const Vec4& a) {
     return {a.x,a.y,a.z};
 }
 
+inline Vec2 xy(const Vec4& a){
+    return {a.x,a.y};
+}
+
 inline Vec4 normalized(const Vec4& a) {
     return a / norm(a);
 }
