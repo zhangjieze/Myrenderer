@@ -42,11 +42,11 @@ int main(){
     Mat4 model2 = rotate * trans * sc;
 
 
-    Vec4 a_m1 = model1 * a_local;
+    Vec4 a_m1 = model1 * a_local; //先进行几何空间坐标变换
     Vec4 b_m1 = model1 * b_local;
     Vec4 c_m1 = model1 * c_local;
 
-    Vec4 am1screen = vp * a_m1;
+    Vec4 am1screen = vp * a_m1; //再映射回屏幕坐标空间
     Vec4 bm1screen = vp * b_m1;
     Vec4 cm1screen = vp * c_m1;
 
