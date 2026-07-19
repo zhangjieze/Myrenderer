@@ -214,6 +214,7 @@ tips:因为旋转矩阵为正交阵,故满足$R^TR=I$ ,$R^-1 = R ^ T$.
     rotation_y(-yaw);
     ```
  
+ ---
  - **lookat**,约定3个输入: **1.eye:相机在世界中的位置 2.target:相机要看向的世界点 3.up:“画面上方朝向”的参考方向.**首先,相机的观察方向是相机面向世界点的方向,forward = target - eye.但只有forward还不够.因为“朝着点看”并没有规定相机怎么滚转.
  也就是说相机的其它方向是不固定的,此时up再给一个自由度,告诉我们,理想情况的相机位置它的上方在什么地方.同时可以用叉积确定它的右方向.
  $right=normalize(cross(forward,up))$.
@@ -229,7 +230,7 @@ tips:有两个特殊的情况,也就是说如果目标点和相机重合,target 
 
 
 - 对于任意一点P,它在相机坐标系里面该如何表示呢?假设它的世界坐标是D,相机坐标是eye,那么如果相机作为原点,表示的向量为P-eye.
-也就是差向量.相机坐标的 X 分量，就是P在 right 方向上的投影长度:$x = dot(right,D-eye)$,同理它的上方为$y = dot(camera\_up,D-eye)$.在右手系表示的坐标系中,镜头朝向是 -Z 方向,所以在右手系表示中$z = dot(-forward,D-eye)$
+也就是差向量.相机坐标的 X 分量，就是P在 right 方向上的投影长度:$x = dot(right,D-eye)$,同理它的上方为$y = dot(camera\_up,D-eye)$.在右手系表示的坐标系中,镜头朝向是 -Z 方向(即右手系的真正z正方向为forward的负方向),所以在右手系表示中$z = dot(-forward,D-eye)$
 - 为方便计算,展开$x = dot(right,D) - dot(right,eye)$,最终得到的`View Matrix`为
 ```
 [rx ry rz -dot(right,eye)]
@@ -237,9 +238,7 @@ tips:有两个特殊的情况,也就是说如果目标点和相机重合,target 
 [-fx -fy -fz dot(forward,eye)]
 [0 0 0 1]
 ```
-
-
-
+---
 
 
 
