@@ -1,7 +1,4 @@
-#include <cassert>
-#include <cmath>
-#include <limits>
-#include <vector>
+#include <numbers>
 
 #include "geometry.h"
 #include "rasterizer.h"
@@ -9,10 +6,7 @@
 
 int main(){
     TGAImage image(100,100);
-    std::vector<double> zbuffer(
-        image.width() * image.height(),
-        -std::numeric_limits<double>::infinity()
-    );
+    
     Vec4 a_local{-0.5, -0.5, 0.2, 1.0};
     Vec4 b_local{ 0.5, -0.5, 0.2, 1.0};
     Vec4 c_local{ 0.0,  0.5, 0.2, 1.0};
@@ -24,8 +18,9 @@ int main(){
 
     Mat4 vp = viewport(image.width(), image.height());
     Mat4 modeli = identity();
-    double camera_angle1 = 30.0;
-    double camera_angle2 = -45.0;
+    const double camera_angle1 = 30.0 * std::numbers::pi / 180.0;
+    const double camera_angle2 = -45.0 * std::numbers::pi / 180.0;
+
     Mat4 view1 = rotation_z(-camera_angle1);
     Mat4 view2 = rotation_z(-camera_angle2);
 

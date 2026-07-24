@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <cassert>
 
 struct Vec2 {
     double x = 0.0;
@@ -180,6 +181,48 @@ struct Mat4 {
 inline Mat4 identity(){
     return Mat4{{{1.0,0.0,0.0,0.0}, {0.0,1.0,0.0,0.0}, {0.0,0.0,1.0,0.0}, {0.0,0.0,0.0,1.0}}};
 }
+
+
+//lookat
+inline Mat4 look_at(const Vec3& eye,const Vec3& target,const Vec3& up){
+    constexpr double epsilon = 1e-12;
+    const Vec3 forward_raw = target - eye;
+    assert(norm(forward_raw) > epsilon);//assert判断是否target与eye重合
+
+    const Vec3 forward = normalized(forward_raw);
+    const Vec3 right_raw = cross(forward, up);
+    assert(norm(right_raw) > epsilon);//assert判断是否farward与up平行
+
+    const Vec3 right = normalized(right_raw);
+    const Vec3 camera_up = cross(right,forward);
+
+    Mat4 view = identity();
+
+    view.m[0][0] = right.x;
+    view.m[0][1] = right.y;
+    view.m[0][2] = right.z;
+    view.m[0][3] = -dot(right, eye);
+
+    view.m[1][0] = camera_up.x;
+    view.m[1][1] = camera_up.y;
+    view.m[1][2] = camera_up.z;
+    view.m[1][3] = -dot(camera_up, eye);
+
+    view.m[2][0] = -forward.x;
+    view.m[2][1] = -forward.y;
+    view.m[2][2] = -forward.z;
+    view.m[2][3] = dot(forward, eye);
+
+    return view;
+
+}
+
+
+
+
+
+
+
 
 
 

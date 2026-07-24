@@ -242,7 +242,9 @@ tips:有两个特殊的情况,也就是说如果目标点和相机重合,target 
 
 
 
-
+# day23
+- 修改`View_Matrix_rotation.cpp`中的角度,sin和cos接受的角度是弧度,同时进行冗余代码微调
+- 在geometry.h 中 实现`look_at()`内联函数,矩阵前三行分别对应 right、camera_up、-forward 的点积投影,第四列则是把相机原点移到 eye 后得到的平移项.
 
 
 
