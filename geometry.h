@@ -194,7 +194,7 @@ inline Mat4 look_at(const Vec3& eye,const Vec3& target,const Vec3& up){
     assert(norm(right_raw) > epsilon);//assert判断是否farward与up平行
 
     const Vec3 right = normalized(right_raw);
-    const Vec3 camera_up = cross(right,forward);
+    const Vec3 camera_up = cross(right,forward); //right和forward已经是单位化,直接正交即可
 
     Mat4 view = identity();
 
