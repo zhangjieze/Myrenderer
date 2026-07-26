@@ -142,6 +142,13 @@ inline Vec2 xy(const Vec4& a){
     return {a.x,a.y};
 }
 
+inline Vec3 perspective_divide(const Vec4& clip){
+    const double epsilon = 1e-12;
+    assert(std::abs(clip.w) > epsilon);
+
+    return {clip.x/clip.w,clip.y/clip.w,clip.z/clip.w};
+}
+
 inline Vec4 normalized(const Vec4& a) {
     return a / norm(a);
 }

@@ -250,9 +250,46 @@ tips:有两个特殊的情况,也就是说如果目标点和相机重合,target 
 而因为没有实现Project Matrix,所以蓝色三角形不会因为相机更远或更近而产生透视缩小,从而还是有一种奇怪的感觉.
 
 
+# day24
+> View Matrix 部分已经完整收束:平移、旋转的逆变换、look_at 
 
 
+推导、可复用接口和独立场景都具备,不过为了解决相机的远近造成的影响,进入Projection Matrix.
 
+当前管线为 `local -> model -> look_at(view) -> viewport`
+设一个顶点已经经过 Model Matrix 和 View Matrix,处于相机空间 
+$P_view = [x_v y_v z_v 1]$,现在乘以Projection Matrix得到其次裁减坐标$P = [x_c y_c z_c w_c]$,这一部分就是合理构造$w_c$,让后续的除法能够产生“近大远小”
+
+
+1. 第一步:右手相机中,可见点满足: $z < 0$,我们希望透视除法的分母是正的距离,即$w_c = -z_v$,故Matrix的第四行必须是[0 0 -1 0].
+```cpp
+projection.m[3][0] = 0.0;
+projection.m[3][1] = 0.0;
+projection.m[3][2] = -1.0;
+projection.m[3][3] = 0.0;
+```
+这样会出现$x_ndc = x_clip / w_clip,y_ndc = y_clip / w_clip$,从而实现距离越远,分母越大,画面越小
+
+2. 第二步:那么拿到裁剪空间的坐标,具体应该如何做? 以大白话角度来描述:首先,画面有一个角度,相机里面的广角类似,视角越广,看见的平面范围就相应的越广;同时看到的画面肯定和原先屏幕的大小有关,也就是width和height;还有就是看到的空间范围肯定不是任何深度都能看到,需要规定能看到的最近的平面和最远的平面.
+综上,给出四个参数表述相机的视椎体:
+```shell
+fovy   ：垂直视场角，单位是弧度
+aspect ：画面宽 / 高
+near   ：近裁剪平面到相机的正距离
+far    ：远裁剪平面到相机的正距离
+```
+
+3. 第三步: 对于x,y坐标,最主要需要考虑的为fovy(视场角)和aspect(宽高比),详细见`Projection-xy`.对于深度z,希望 Projection 不会让它依赖 X/Y,即z_c和z呈现线性关系,$z_{clip}=A z_{view}+B$,这里的 $B$ 来自输入点的 w = 1.通过near -> -1和far -> 1可以解出A和B.
+矩阵最终结果为`Projection Matrix`
+综上,四行的最终职责分别为:
+```shell
+第 1 行：控制水平视场和 aspect
+第 2 行：控制垂直视场
+第 3 行：把 near/far 深度映射到 NDC
+第 4 行：制造 w = -z，供透视除法使用
+```
+tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y方向.
+理解: $tan(fov_{x}/2) = width/height * tan(fov_{y}/2)$
 
 
 
