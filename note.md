@@ -292,6 +292,9 @@ tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y
 理解: $tan(fov_{x}/2) = width/height * tan(fov_{y}/2)$
 
 
+# day25
+- 实现projection的例子`Projection_Matrix.cpp`,这里实现时需要注意vp不能直接和Projection -> view -> model管线接起来,因为要实现透视除法,中间必须先对 Clip Space 做 / w 变成NDC空间才行.
+每个点的实现的过程为`p_local -> p_clip -> p_ndc -> p_screen`.
 
 
 

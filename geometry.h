@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cassert>
+#include <numbers>
 
 struct Vec2 {
     double x = 0.0;
@@ -226,7 +227,30 @@ inline Mat4 look_at(const Vec3& eye,const Vec3& target,const Vec3& up){
 
 
 
+//Projection Matrix
+inline Mat4 perspective(double fovy_radians,double aspect,double near,double far){
+    constexpr double epsilon = 1e-12;
 
+    assert(fovy_radians > epsilon);
+    assert(fovy_radians < std::numbers::pi - epsilon);
+    assert(aspect > epsilon);
+    assert(near > epsilon);
+    assert(far > near);
+
+    const double q = 1.0 / std::tan(fovy_radians / 2.0);
+    const double depth = far - near;
+
+    Mat4 projection{};
+    projection.m[0][0] = q / aspect;
+    projection.m[1][1] = q;
+
+    projection.m[2][2] = - (far + near) / depth;
+    projection.m[2][3] = - (2.0 * far * near) / depth;
+
+    projection.m[3][2] = -1.0;
+
+    return projection;
+}
 
 
 
