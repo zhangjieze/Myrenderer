@@ -297,7 +297,10 @@ tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y
 每个点的实现的过程为`p_local -> p_clip -> p_ndc -> p_screen`.
 
 
-
+# day26
+- 修改zbuffer规则,因为near -> -1,far -> 1,所以现在变成了`越小越近`,旧的测试作为旧阶段测试,不做修改;修改rasterize.cpp的深度规则:z >= zbuffer[index]的时候证明距离相机越远.
+- 进行projection规则下新的深度测试,在`projection_depth.tga`中,红色近三角形覆盖重叠区域.蓝色远三角形只在红色之外的右侧部分可见
+- [tips] to_screen() 返回的 Vec4.z 仍是 z_ndc，因为 viewport() 不改 Z;它正好是 rasterizer 约定要接收的深度值.
 
 
 

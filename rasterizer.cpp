@@ -232,7 +232,7 @@ void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double
             //深度插值
             double z = za * bc.x + zb * bc.y + zc * bc.z;
             int index = x + y * image.width();
-            if (z <= zbuffer[index]) continue;
+            if (z >= zbuffer[index]) continue;
             zbuffer[index] = z;
             image.set(x, y, color);
         }
@@ -252,7 +252,7 @@ void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec
             //先进行深度插值
             double z = za * bc.x + zb * bc.y + zc * bc.z;
             int index = x + y * image.width();
-            if (z <= zbuffer[index]) continue;
+            if (z >= zbuffer[index]) continue;
             zbuffer[index] = z;
             TGAColor mixed = interpolate_color(ca, cb, cc, bc);
             image.set(x,y,mixed);

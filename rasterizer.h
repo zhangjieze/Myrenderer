@@ -16,6 +16,7 @@ void triangle_barycentric_filled(const Vec2& a,const Vec2& b,const Vec2& c,TGAIm
 
 void triangle_barycentric_gradient(const Vec2& a,const Vec2& b,const Vec2& c,const TGAColor& ca,const TGAColor& cb,const TGAColor& cc,TGAImage& image);
 
+// NDC depth: smaller values are closer.
 void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,TGAImage& image,std::vector<double>& zbuffer,const TGAColor& color);
 
 void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec2 &c, double za,double zb,double zc,const TGAColor &ca, const TGAColor &cb, const TGAColor &cc, TGAImage &image,std::vector<double>& zbuffer);
