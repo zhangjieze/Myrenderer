@@ -322,7 +322,9 @@ tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y
 - [tips]: rasterizer只需要回答这个点是否在三角形内部,也就是判断 `bc.x>= 0 && bc.y >= 0 && bc.z >= 0`.
 
 
-
+# day28
+- 升级插值函数`triangle_barycentric_gradient_depth`,里面用到了颜色的属性,这里有两组重心坐标 screen_bc:覆盖测试和 NDC z 插值;surface_bc:颜色插值,之后也会用于 UV、法线等三维表面属性
+- 可能导致一些前面的测试无法编译,后面在遇到的时候进行修改即可.
 
 
 

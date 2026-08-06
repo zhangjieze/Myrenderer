@@ -19,4 +19,5 @@ void triangle_barycentric_gradient(const Vec2& a,const Vec2& b,const Vec2& c,con
 // NDC depth: smaller values are closer.
 void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,TGAImage& image,std::vector<double>& zbuffer,const TGAColor& color);
 
-void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec2 &c, double za,double zb,double zc,const TGAColor &ca, const TGAColor &cb, const TGAColor &cc, TGAImage &image,std::vector<double>& zbuffer);
+//因为经过透视投影后,w是不一致的,za,zb,zc不能直接使用于属性插值,inv_w 是每个顶点的 1 / clip.w
+void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec2 &c, double za,double zb,double zc,double inv_wa,double inv_wb,double inv_wc,const TGAColor &ca, const TGAColor &cb, const TGAColor &cc, TGAImage &image,std::vector<double>& zbuffer);
