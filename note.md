@@ -331,6 +331,13 @@ tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y
 - 实现perspective_gradient.cpp
 
 
+# day30
+- 目前能够实现一条比较完整的管线`model -> view -> projection -> vp`
+- 现在进入 OBJ loader, OBJ 是一种很简单、很常见的3D模型文件格式,之前做的非洲人头内部点就是用obj文件格式保存的,比如african_head.obj
+- OBJ 文件把同类数据写在文本中,是模型数据进入管线的入口
+- OBJ最基础的数据结构为v：vertex,顶点位置,f：face,面,顶点位置即为几何空间坐标,f:a b c表示这个这个面由第a个顶点,第b个顶点以及第c个顶点组成
+- `vt` 和 `vn` 会分别在纹理、光照阶段接入.
+- 实现model.h
 
 
 
