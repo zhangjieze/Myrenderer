@@ -340,6 +340,32 @@ tips: 如果fov是水平视场的时,那么宽高比修正确实应该体现在y
 - 实现model.h
 
 
+# day31
+- 实现model.cpp解析obj文件中点的信息
+
+- 补充知识:
+```
+ifstream为 input file stream输入文件流,是专门用于从文件读取数据的对象,后面就可以从input里面读取内容
+后面就是一行一行读取文件
+istringstream的作用是把一整行再拆开,从stream里面按空格分开依次读取
+
+整体流程:
+OBJ 文件
+   ↓
+ifstream
+   ↓
+读取一整行
+   ↓
+"v 1.2 3.4 5.6"
+   ↓
+istringstream
+   ↓
+依次提取
+   ↓
+v    1.2    3.4    5.6
+之后保存进vertice_即可
+```
+是一个非常简化的 OBJ 文件解析器.后面解析face的信息是类似的
 
 
 
