@@ -371,7 +371,7 @@ v    1.2    3.4    5.6
 # day32
 - 实现model.cpp解析obj文件中面的信息
 - obj中face行的结构为`位置索引 / 纹理坐标索引 / 法线索引`,例如: f 24/1/24 25/2/25 26/3/26,目前只保存这个面的位置索引,在后面引入纹理和法线后更新Face的struct.
-- 实现face_vertice_test,测试model.cpp的效果
+- 实现face_vertice_test,测试model.cpp的效果,同时验证索引能取回真正的三角形顶点.
 
 
 
