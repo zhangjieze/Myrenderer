@@ -3,6 +3,15 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <string>
+
+
+namespace{
+    int position_index(const std::string& reference){ 
+        const std::size_t slash = reference.find('/'); //找到第一个/的位置
+        return std::stoi(reference.substr(0,slash)) - 1; //obj从1开始编号,vector从0开始编号,所以这里需要减一
+    }
+}
 
 Model::Model(const std::string& filename){//:: 作用域解析运算符
     std::ifstream input(filename);
@@ -20,6 +29,13 @@ Model::Model(const std::string& filename){//:: 作用域解析运算符
             stream >> x >> y >> z;
 
             vertices_.push_back({x, y, z});
+        }
+        else if(kind == "f"){
+            std::string a;
+            std::string b;
+            std::string c;
+            stream >> a >> b >> c;
+            faces_.push_back({position_index(a),position_index(b),position_index(c)});
         }
     }
 
