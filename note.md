@@ -374,6 +374,10 @@ v    1.2    3.4    5.6
 - 实现face_vertice_test,测试model.cpp的效果,同时验证索引能取回真正的三角形顶点.
 
 
+# day33
+画出african_head的头部线框模型,不过没有引入zbuffer
+
+
 
 
 
