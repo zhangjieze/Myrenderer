@@ -375,7 +375,13 @@ v    1.2    3.4    5.6
 
 
 # day33
-画出african_head的头部线框模型,不过没有引入zbuffer
+- 画出african_head的头部线框模型,不过没有引入zbuffer
+
+# day34
+- head_zbuffer用`triangle_barycentric_depth`实现纯色zbuffer,不过不能说明zbuffer的作用,需要引入明暗变化
+- head_zbuffer 中设计Flat Shading,最基础的 Lambert 漫反射光照,即根据`“面朝向光源的程度”`计算亮度,然后把这个亮度转换成灰度颜色
+**tips::** 这里使用的是方向光,不使用点光源,Lambert 漫反射只关心表面能否正对入射光.同时光源很远,所有光线近似平行,因此每个面都可以共用固定光照基准 light_direction = {0, 0, 1}
+- Lambert 漫反射公式为I=max(0,n⋅l),即负强度代表背光,直接不亮即可
 
 
 
