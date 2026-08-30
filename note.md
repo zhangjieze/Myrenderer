@@ -384,6 +384,67 @@ v    1.2    3.4    5.6
 - Lambert 漫反射公式为I=max(0,n⋅l),即负强度代表背光,直接不亮即可
 
 
+# day35(UV)
+- 进入纹理映射
+- 更新tgaimage,实现`get`,get: pixels_[index/index+1/index+2] -> color.b/g/r,为`set`镜像,set: color.b/g/r -> pixels_[index/index+1/index+2]
+- **实现`read`**
+tga格式文件格式为:
+┌──────────────────────┐
+│ TGA Header           │  18 bytes
+├──────────────────────┤
+│ Image ID             │  可选
+├──────────────────────┤
+│ Color Map            │  可选
+├──────────────────────┤
+│ Pixel Data           │
+│ Pixel Data           │
+│ Pixel Data           │
+└──────────────────────┘
+
+header用于存头18bytes内容.
+
+- ifstream的read接口为`read(char* buffer, std::streamsize count);`,要求char* 类型,而header中的元素类型是uint8_t*(header.data()返回第一个元素指针),虽然都是字符,但是接口不匹配.reinterpret_cast实现将此uint8_t 内存暂时当成一块 char 内存存储,从而可以让匹配接口让read往这块内存中写内容,最终实现把input的前18字节写入header. 注意这里只是内存上的映射关系,而非数值的转化.
+
+- 读取完需要检查input,检查是否因为header长度不够18byte而读取失败 `if(!input) return false;`
+
+- 接下来解释 TGA Header,以下为tga header的含义
+| 字节位置    | 含义                |
+| ------- | ----------------- |
+| `0`     | Image ID 长度       |
+| `1`     | 是否有 Color Map     |
+| `2`     | 图片类型              |
+| `3~11`  | Color Map / 坐标等信息 |
+| `12~13` | 图片宽度              |
+| `14~15` | 图片高度              |
+| `16`    | 每像素多少 bit         |
+| `17`    | Image Descriptor  |
+
+- header[0]记录ImageID的长度,后面用于跳过
+- header[1]记录是否使用调色板,也就是Color Mapped Image,不过这里只使用简单BGR不进行颜色编号映射,后期如果对颜色有要求可选,此处仅支持color_map_type == 0.
+- TGA支持多种图片编码模式,常见的有2(Uncompressed True-Color Image),3(Uncompressed Grayscale Image),10(RLE True-Color Image),此处支持未压缩的真彩图片,即header[2] == 2
+- 宽度采用小端序存储,12存储的是低8位,13为高8位,故需要先将13左移8b,具体就是width = lowB + highB * 256.
+- 高度同理.
+- bits_per_pixel记录每个像素占多少bit,这里BGR各8b,故为24bits
+- header[17]表示布局,当前 framebuffer 和贴图都采用左下角原点,所以暂时只接受 0,避免读入后上下颠倒
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
