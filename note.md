@@ -428,6 +428,13 @@ header用于存头18bytes内容.
 - header[17]表示布局,当前 framebuffer 和贴图都采用左下角原点,所以暂时只接受 0,避免读入后上下颠倒
 
 
+# day36
+完善对read的说明.
+- 对于imageid这里无需使用,所以通过ignore跳过.
+- 整个文件一共有width * height * 3个字节,uint8_t = 1 byte,所以创建一个pixels用于存储所有的字节.
+- input read方法把Pixel Data读入pixels,如果读取成功,即更新TGAImage的对象.
+- 这里的思想是先完整解析到临时状态,验证成功后再 commit 到对象,而不是直接对对象进行修改,这样不会把TGAImage对象改个半残.
+tips: 不直接写`pixels_ = pixels;`,因为这样会涉及拷贝,.swap直接交换内存即可,也可以使用stl库的move.
 
 
 
