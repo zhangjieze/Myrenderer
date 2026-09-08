@@ -438,7 +438,39 @@ tips: 不直接写`pixels_ = pixels;`,因为这样会涉及拷贝,.swap直接交
 
 
 
+# day37
+read读取RLE Image实现.
+- RLE采用数据包(packet)格式,packet 开头有一个 1 字节的 packet_header,其内容为:
+┌──────────┬─────────────────────┐
+│ bit 7    │ bit 6 ~ bit 0       │
+├──────────┼─────────────────────┤
+│ 类型       packet像素量 - 1
+└──────────┴─────────────────────┘
+最高bit如果为`1`说明这个这个是RLE packet,是0则说明这是Raw packet.
 
+- `packet_header & 0x7f`把最高位 bit7 清零,只留下低 7 位(packet像素数量-1),因此+1即可算出packet描述的像素数量.
+- 一个 RLE packet,同一个像素会重复 count 次”,因此循环count,网pixels中写入count个同类型像素.RLE的作用其实就是实现压缩存储的功能,复用下一个位置的bgr.
+- Raw packet是未经过压缩存储,故只需要从前往后读取相应数目(count)的像素即可.
+整个RLE解码过程伪代码为:
+```
+while 还没有填满整张图片(pixel_index < pixel_cnt):
+
+    读取 1 byte packet_header
+
+    从低 7 位得到 count
+
+    得到当前写入位置 destination
+
+    如果 bit7 = 1:
+        读取 1 个 BGR
+        重复写 count 次
+
+    否则:
+        直接读取 count 个 BGR
+
+    pixel_index += count
+
+```
 
 
 

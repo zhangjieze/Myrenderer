@@ -51,15 +51,50 @@ bool TGAImage::read(const std::string& filename){
     const int height = header[14] | (header[15] << 8);
     const std::uint8_t bits_per_pixel = header[16];
 
-    if (color_map_type != 0 || image_type != 2 || bits_per_pixel != 24 || width <= 0 || height <= 0 || header[17] != 0) {return false;}
+    if (color_map_type != 0 || image_type != 2 && image_type != 10|| bits_per_pixel != 24 || width <= 0 || height <= 0 || header[17] != 0) {return false;}
     
     input.ignore(static_cast<std::streamsize>(id_length));
     if(!input) return false;
 
     const std::size_t byte_cnt = static_cast<std::size_t>(width) * height * 3;
     std::vector<std::uint8_t> pixels(byte_cnt);
-    input.read(reinterpret_cast<char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
-    if (!input) return false;
+    if (image_type == 2){
+        input.read(reinterpret_cast<char*>(pixels.data()),static_cast<std::streamsize>(pixels.size()));
+        if (!input) return false;
+    }
+    else if (image_type == 10){
+        const std::size_t pixel_cnt = static_cast<std::size_t>(width) * height;
+        std::size_t pixel_index = 0;
+
+        while (pixel_index < pixel_cnt){
+            std::uint8_t packet_header = 0;
+            input.read(reinterpret_cast<char*>(&packet_header),static_cast<std::streamsize>(1));
+            if (!input) return false;
+
+            const std::size_t count = static_cast<std::size_t>(packet_header & 0x7f) + 1;
+            if (count > pixel_cnt - pixel_index) return false;
+
+            std::uint8_t* destination = pixels.data() + pixel_index * 3;
+            if (packet_header & 0x80){
+                std::array<std::uint8_t, 3> bgr{};
+
+                input.read(reinterpret_cast<char*>(bgr.data()),static_cast<std::streamsize>(bgr.size()));
+                if (!input) return false;
+
+                for (std::size_t i = 0 ; i < count ;++i){
+                    destination[i * 3] = bgr[0];
+                    destination[i * 3 + 1] = bgr[1];
+                    destination[i * 3 + 2] = bgr[2];
+                }
+            }
+            else{
+                const std::size_t packet_byte_count = count * 3;
+                input.read(reinterpret_cast<char*>(destination),static_cast<std::streamsize>(packet_byte_count));
+                if (!input) return false;
+            }
+            pixel_index += count;
+        }
+    }
 
     width_ = width;
     height_ = height;
