@@ -474,7 +474,10 @@ while 还没有填满整张图片(pixel_index < pixel_cnt):
 
 
 
+# day38
+- 实现对obj解析器对obj纹理坐标(vt)的读取.保存于`texcoords_`中.
 
+思考🤔:因为face不能只保存顶点位置的索引,同时要保存顶点对应uv坐标的索引,所以每个face存两个array,第一个array用于保存位置索引,第二个array用于保存uv索引,后面还有的话以此类推。
 
 
 

@@ -37,6 +37,12 @@ Model::Model(const std::string& filename){//:: 作用域解析运算符
             stream >> a >> b >> c;
             faces_.push_back({position_index(a),position_index(b),position_index(c)});
         }
+        else if(kind == "vt"){
+            double u = 0.0;
+            double v = 0.0;
+            stream >> u >> v;
+            texcoords_.push_back({u,v});
+        }
     }
 
 }
@@ -49,4 +55,8 @@ const std::vector<Vec3>& Model::vertices() const{
 
 const std::vector<Model::Face>& Model::faces() const{
     return faces_;
+}
+
+const std::vector<Vec2>& Model::texcoords() const{
+    return texcoords_;
 }

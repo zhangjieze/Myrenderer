@@ -51,7 +51,7 @@ bool TGAImage::read(const std::string& filename){
     const int height = header[14] | (header[15] << 8);
     const std::uint8_t bits_per_pixel = header[16];
 
-    if (color_map_type != 0 || image_type != 2 && image_type != 10|| bits_per_pixel != 24 || width <= 0 || height <= 0 || header[17] != 0) {return false;}
+    if (color_map_type != 0 || (image_type != 2 && image_type != 10)|| bits_per_pixel != 24 || width <= 0 || height <= 0 || header[17] != 0) {return false;}
     
     input.ignore(static_cast<std::streamsize>(id_length));
     if(!input) return false;

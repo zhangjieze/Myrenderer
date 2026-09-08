@@ -35,7 +35,7 @@ namespace{
 
 int main(){
     TGAImage image(800,800);
-    const TGAColor white{255, 255, 255};
+    //const TGAColor white{255, 255, 255}; 已用flat shading取代
 
     Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
 
