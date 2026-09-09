@@ -5,9 +5,14 @@
 #include <vector>
 #include "geometry.h"
 
+struct FaceVertex{
+    int position_index = -1;
+    int texcoord_index = -1;
+}
+
 class Model {
 public:
-    using Face = std::array<std::array<int,3>,2>;
+    using Face = std::array<FaceVertex,3>;
     explicit Model(const std::string& filename); //声明构造函数,禁止隐式转换
 
     const std::vector<Vec3>& vertices() const; //返回引用

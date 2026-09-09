@@ -480,7 +480,9 @@ while 还没有填满整张图片(pixel_index < pixel_cnt):
 思考🤔:因为face不能只保存顶点位置的索引,同时要保存顶点对应uv坐标的索引,所以每个face存两个array,第一个array用于保存位置索引,第二个array用于保存uv索引,后面还有的话以此类推。
 
 
-
+# day39
+- 不过更好的维护方式是直接定义一个数据结构记录facevertex的位置索引和uv索引更合适.
+- 实现parse_face_vertex,用于读取每个面的点的position_index和texcoord_index.
 
 
 

@@ -7,9 +7,25 @@
 
 
 namespace{
-    int position_index(const std::string& reference){ 
-        const std::size_t slash = reference.find('/'); //找到第一个/的位置
-        return std::stoi(reference.substr(0,slash)) - 1; //obj从1开始编号,vector从0开始编号,所以这里需要减一
+    FaceVertex parse_face_vertex(const std::string& reference){
+        FaceVertex result;
+        const std::size_t first_slash = reference.find('/');
+        if (first_slash == std::string::npos){ //如果只有position索引
+            result.position_index = std::stoi(reference) - 1;
+            return result;
+        }
+        
+        result.position_index = std::stoi(reference.substr(0, first_slash)) - 1;
+        
+        const std::size_t second_slash = reference.find('/',first_slash + 1);
+        const std::size_t uv_end = (second_slash == std::string::npos ? reference.size() : second_slash); //找边界
+        
+        const std::string uv_text = reference.substr(first_slash + 1, uv_end - first_slash - 1);
+
+        if (!uv_text.empty()){ //处理空uv索引
+            result.texcoord_index = std::stoi(uv_text) -1;
+        }
+        return result;
     }
 }
 
@@ -35,7 +51,7 @@ Model::Model(const std::string& filename){//:: 作用域解析运算符
             std::string b;
             std::string c;
             stream >> a >> b >> c;
-            faces_.push_back({position_index(a),position_index(b),position_index(c)});
+            faces_.push_back({parse_face_vertex(a),parse_face_vertex(b),parse_face_vertex(c)});
         }
         else if(kind == "vt"){
             double u = 0.0;
