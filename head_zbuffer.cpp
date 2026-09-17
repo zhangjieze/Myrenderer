@@ -24,6 +24,12 @@ namespace{
         return ndc.z;
     }
 
+    double inv_w(const Vec3& local_p,const Mat4& clip_transform){
+        const Vec4 local{local_p.x,local_p.y,local_p.z,1.0};
+        const Vec4 clip = clip_transform * local;
+        return 1.0 / clip.w;
+    }
+
     Vec3 facenormal(const Mat4& modelview,const Vec3& alocal,const Vec3& blocal,const Vec3& clocal){
         const Vec4 aview = modelview * Vec4{alocal.x,alocal.y,alocal.z,1.0};
         const Vec4 bview = modelview * Vec4{blocal.x,blocal.y,blocal.z,1.0};
@@ -36,6 +42,8 @@ namespace{
 int main(){
     TGAImage image(800,800);
     //const TGAColor white{255, 255, 255}; 已用flat shading取代
+    TGAImage source;
+    source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga");
 
     Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
 
@@ -58,36 +66,38 @@ int main(){
     const Mat4 vp = viewport(image.width(), image.height());
 
     for (const Model::Face& face : object.faces()){
-        const Vec2 a = to_screen(object.vertices()[face[0]], clip_transform, vp);
-        const Vec2 b = to_screen(object.vertices()[face[1]], clip_transform, vp);
-        const Vec2 c = to_screen(object.vertices()[face[2]], clip_transform, vp);
+        const Vec3 a_local = object.vertices()[face[0].position_index];
+        const Vec3 b_local = object.vertices()[face[1].position_index];
+        const Vec3 c_local = object.vertices()[face[2].position_index];
 
-        const Vec3 facenormalvec = facenormal(modelview, object.vertices()[face[0]], object.vertices()[face[1]], object.vertices()[face[2]]);
-
-
-        double a_ndc = ndc(object.vertices()[face[0]], clip_transform);
-        double b_ndc = ndc(object.vertices()[face[1]], clip_transform);
-        double c_ndc = ndc(object.vertices()[face[2]], clip_transform);
+        const Vec2 a = to_screen(a_local, clip_transform, vp);
+        const Vec2 b = to_screen(b_local, clip_transform, vp);
+        const Vec2 c = to_screen(c_local, clip_transform, vp);
 
 
-        const double intensity = std::clamp(dot(facenormalvec, light_direction_view),0.0,1.0);
-        const auto shade = static_cast<std::uint8_t>(255.0 * intensity);
-        const TGAColor face_color{shade, shade, shade};
+        double a_ndc = ndc(a_local, clip_transform);
+        double b_ndc = ndc(a_local, clip_transform);
+        double c_ndc = ndc(c_local, clip_transform);
 
-        triangle_barycentric_depth(
-            a,
-            b,
-            c,
-            a_ndc,
-            b_ndc,
-            c_ndc,
-            image,
-            zbuffer,
-            face_color
-        );
+        const Vec2 a_uv = object.texcoords()[face[0].texcoord_index];
+        const Vec2 b_uv = object.texcoords()[face[1].texcoord_index];
+        const Vec2 c_uv = object.texcoords()[face[2].texcoord_index];
+
+        TGAColor a_color,b_color,c_color;
+        source.get(a_uv.x * source.width(),a_uv.y * source.height(),a_color);
+        source.get(b_uv.x * source.width(),b_uv.y * source.height(),b_color);
+        source.get(c_uv.x * source.width(),c_uv.y * source.height(),c_color);
+
+        double inv_wa = inv_w(a_local,clip_transform);
+        double inv_wb = inv_w(b_local,clip_transform);
+        double inv_wc = inv_w(c_local,clip_transform);
+
+        triangle_barycentric_gradient_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_color,b_color,c_color,image,zbuffer);
+
+        
         
     }
 
-    image.write("head_zbuffer_flat_shading.tga");
+    image.write("head_uv_try.tga");
 
 }

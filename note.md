@@ -485,6 +485,13 @@ while 还没有填满整张图片(pixel_index < pixel_cnt):
 - 实现parse_face_vertex,用于读取每个面的点的position_index和texcoord_index.
 
 
+# day40
+- 尝试直接取各个顶点的uv坐标对应的颜色直接进行颜色插值 - 'head_uv_try',不过这个并非真正的纹理插值,在数学上不成立,因为纹理映射函数对于顶点非连续.
+
+假设三角形三个顶点的 UV 是：uv_a, uv_b, uv_c, 纹理映射函数为C=T(uv),我这里采用了CA=T(UVA),CB=T(UVB),CC=T(UVC)再进行的插值.
+因为T非线性,所以一般情况下`T(αUVA+βUVB+γUVC) != αT(UVA)+βT(UVB)+γT(UVC)`
+
+所以结果就是,渲染出来的head_uv_try.tga糖完了......
 
 
 

@@ -8,7 +8,7 @@
 struct FaceVertex{
     int position_index = -1;
     int texcoord_index = -1;
-}
+};
 
 class Model {
 public:
