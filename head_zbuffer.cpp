@@ -37,6 +37,8 @@ namespace{
 
         return normalized(cross(xyz(bview)-xyz(aview), xyz(cview)-xyz(aview)));
     }
+
+
 }
 
 int main(){
@@ -76,28 +78,25 @@ int main(){
 
 
         double a_ndc = ndc(a_local, clip_transform);
-        double b_ndc = ndc(a_local, clip_transform);
+        double b_ndc = ndc(b_local, clip_transform);
         double c_ndc = ndc(c_local, clip_transform);
 
         const Vec2 a_uv = object.texcoords()[face[0].texcoord_index];
         const Vec2 b_uv = object.texcoords()[face[1].texcoord_index];
         const Vec2 c_uv = object.texcoords()[face[2].texcoord_index];
 
-        TGAColor a_color,b_color,c_color;
-        source.get(a_uv.x * source.width(),a_uv.y * source.height(),a_color);
-        source.get(b_uv.x * source.width(),b_uv.y * source.height(),b_color);
-        source.get(c_uv.x * source.width(),c_uv.y * source.height(),c_color);
 
         double inv_wa = inv_w(a_local,clip_transform);
         double inv_wb = inv_w(b_local,clip_transform);
         double inv_wc = inv_w(c_local,clip_transform);
 
-        triangle_barycentric_gradient_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_color,b_color,c_color,image,zbuffer);
 
-        
+        triangle_barycentric_uv_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_uv,b_uv,c_uv,image,source,zbuffer);
+
+
         
     }
 
-    image.write("head_uv_try.tga");
+    image.write("head_uv_try_add.tga");
 
 }

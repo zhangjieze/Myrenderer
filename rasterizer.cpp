@@ -45,6 +45,14 @@ TGAColor interpolate_color(const TGAColor& ca,const TGAColor& cb,const TGAColor&
     return mixed;
 }
 
+//uv纹理插值抽象
+Vec2 interpolate_uv(const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,const Vec3& bc){
+    Vec2 realuv;
+    realuv.x = bc.x * uv_a.x + bc.y * uv_b.x + bc.z * uv_c.x;
+    realuv.y = bc.x * uv_a.y + bc.y * uv_b.y + bc.z * uv_c.y;
+    return realuv;
+}
+
 //屏幕重心坐标变换回原始三维的重心坐标辅助函数
 Vec3 perspective_correct_barycentric(const Vec3& screen_bc,double inv_wa,double inv_wb,double inv_wc){
     const double wa = screen_bc.x * inv_wa;
@@ -271,6 +279,35 @@ void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec
             Vec3 surface_bc = perspective_correct_barycentric(screen_bc,inv_wa,inv_wb,inv_wc);
             TGAColor mixed = interpolate_color(ca, cb, cc, surface_bc);
             image.set(x,y,mixed);
+        }
+    }
+}
+
+
+//深度和uv插值
+void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer){
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
+    //遍历包围盒
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
+            Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
+            Vec3 bc = barycentric(a,b,c,p);
+            if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            //深度插值
+            double z = za * bc.x + zb * bc.y + zc * bc.z;
+            int index = x + y * image.width();
+            if (z >= zbuffer[index]) continue;
+            zbuffer[index] = z;
+            
+            //屏幕重心 -> 三维坐标重心
+            Vec3 surface_bc = perspective_correct_barycentric(bc,inv_wa,inv_wb,inv_wc);
+            Vec2 uv = interpolate_uv(uv_a,uv_b,uv_c,surface_bc);
+            TGAColor color;
+            source.get(std::clamp(static_cast<int>(uv.x * source.width()),0,source.width() - 1),std::clamp(static_cast<int>(uv.y * source.height()),0,source.height() - 1),color);
+            image.set(x,y,color);
+
+
         }
     }
 }

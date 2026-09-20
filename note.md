@@ -491,7 +491,8 @@ while 还没有填满整张图片(pixel_index < pixel_cnt):
 假设三角形三个顶点的 UV 是：uv_a, uv_b, uv_c, 纹理映射函数为C=T(uv),我这里采用了CA=T(UVA),CB=T(UVB),CC=T(UVC)再进行的插值.
 因为T非线性,所以一般情况下`T(αUVA+βUVB+γUVC) != αT(UVA)+βT(UVB)+γT(UVC)`
 
-所以结果就是,渲染出来的head_uv_try.tga糖完了......
+# day41 (uv插值)
+- 实现triangle_barycentric_uv_depth,结合三维重心坐标对uv坐标进行插值
 
 
 
