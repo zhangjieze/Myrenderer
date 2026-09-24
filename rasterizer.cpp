@@ -285,7 +285,7 @@ void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec
 
 
 //深度和uv插值
-void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer){
+void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,const double intensity,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer){
     BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
 
     //遍历包围盒
@@ -305,6 +305,9 @@ void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,dou
             Vec2 uv = interpolate_uv(uv_a,uv_b,uv_c,surface_bc);
             TGAColor color;
             source.get(std::clamp(static_cast<int>(uv.x * source.width()),0,source.width() - 1),std::clamp(static_cast<int>(uv.y * source.height()),0,source.height() - 1),color);
+            color.b = to_byte(color.b * intensity);
+            color.g = to_byte(color.g * intensity);
+            color.r = to_byte(color.r * intensity);
             image.set(x,y,color);
 
 

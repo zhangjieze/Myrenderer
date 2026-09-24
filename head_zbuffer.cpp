@@ -45,7 +45,7 @@ int main(){
     TGAImage image(800,800);
     //const TGAColor white{255, 255, 255}; 已用flat shading取代
     TGAImage source;
-    source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga");
+    if (!source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga")) return 1;
 
     Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
 
@@ -72,6 +72,9 @@ int main(){
         const Vec3 b_local = object.vertices()[face[1].position_index];
         const Vec3 c_local = object.vertices()[face[2].position_index];
 
+        const Vec3 normal_view = facenormal(modelview, a_local, b_local, c_local);
+        const double intensity = std::clamp(dot(light_direction_view,normal_view),0.0,1.0);
+
         const Vec2 a = to_screen(a_local, clip_transform, vp);
         const Vec2 b = to_screen(b_local, clip_transform, vp);
         const Vec2 c = to_screen(c_local, clip_transform, vp);
@@ -91,12 +94,12 @@ int main(){
         double inv_wc = inv_w(c_local,clip_transform);
 
 
-        triangle_barycentric_uv_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_uv,b_uv,c_uv,image,source,zbuffer);
+        triangle_barycentric_uv_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_uv,b_uv,c_uv,intensity,image,source,zbuffer);
 
 
         
     }
 
-    image.write("head_uv_try_add.tga");
+    image.write("head_uv_flat_shading.tga");
 
 }

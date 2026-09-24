@@ -8,6 +8,7 @@
 struct FaceVertex{
     int position_index = -1;
     int texcoord_index = -1;
+    int normal_index = -1;
 };
 
 class Model {
@@ -18,9 +19,11 @@ public:
     const std::vector<Vec3>& vertices() const; //返回引用
     const std::vector<Face>& faces() const; //face保存的是这个面的顶点的索引,必须是int,使用array保存
     const std::vector<Vec2>& texcoords() const; //纹理坐标
+    const std::vector<Vec3>& normal() const; //顶点法向量
 
 private:
     std::vector<Vec3> vertices_;
     std::vector<Face> faces_;
     std::vector<Vec2> texcoords_;
+    std::vector<Vec3> normal_;
 };

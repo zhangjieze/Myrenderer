@@ -23,4 +23,4 @@ void triangle_barycentric_depth(const Vec2& a,const Vec2& b,const Vec2& c,double
 void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec2 &c, double za,double zb,double zc,double inv_wa,double inv_wb,double inv_wc,const TGAColor &ca, const TGAColor &cb, const TGAColor &cc, TGAImage &image,std::vector<double>& zbuffer);
 
 //uv
-void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);
+void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,const double intensity,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);

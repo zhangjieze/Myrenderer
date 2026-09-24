@@ -25,6 +25,13 @@ namespace{
         if (!uv_text.empty()){ //处理空uv索引
             result.texcoord_index = std::stoi(uv_text) -1;
         }
+
+        if (second_slash != std::string::npos){
+            const std::string normal_text = reference.substr(second_slash+1);
+            if (!normal_text.empty()){
+                result.normal_index = std::stoi(normal_text) -1;
+            }
+        }
         return result;
     }
 }
@@ -59,6 +66,13 @@ Model::Model(const std::string& filename){//:: 作用域解析运算符
             stream >> u >> v;
             texcoords_.push_back({u,v});
         }
+        else if (kind == "vn"){
+            double a;
+            double b;
+            double c;
+            stream >> a >> b >> c;
+            normal_.push_back({a,b,c});
+        }
     }
 
 }
@@ -76,3 +90,9 @@ const std::vector<Model::Face>& Model::faces() const{
 const std::vector<Vec2>& Model::texcoords() const{
     return texcoords_;
 }
+
+const std::vector<Vec3>& Model::normal() const{
+    return normal_;
+}
+
+
