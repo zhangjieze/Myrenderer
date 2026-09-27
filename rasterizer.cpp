@@ -53,6 +53,15 @@ Vec2 interpolate_uv(const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,const Vec
     return realuv;
 }
 
+//normal法向插值抽象
+Vec3 interpolate_normal(const Vec3& normal_a,const Vec3& normal_b, const Vec3& normal_c,const Vec3& bc){
+    Vec3 normal;
+    normal.x = bc.x * normal_a.x + bc.y * normal_b.x + bc.z * normal_c.x;
+    normal.y = bc.x * normal_a.y + bc.y * normal_b.y + bc.z * normal_c.y;
+    normal.z = bc.x * normal_a.z + bc.y * normal_b.z + bc.z * normal_c.z;
+    return normalized(normal); //归一化
+}
+
 //屏幕重心坐标变换回原始三维的重心坐标辅助函数
 Vec3 perspective_correct_barycentric(const Vec3& screen_bc,double inv_wa,double inv_wb,double inv_wc){
     const double wa = screen_bc.x * inv_wa;
@@ -315,6 +324,38 @@ void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,dou
     }
 }
 
+
+//加入顶点法向插值,实现平滑着色
+void triangle_barycentric_uv_normal_depth(const Vec2& a, const Vec2& b, const Vec2& c,double za, double zb, double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a, const Vec2& uv_b, const Vec2& uv_c,const Vec3& normal_a_view,const Vec3& normal_b_view,const Vec3& normal_c_view,const Vec3& light_direction_view,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer){
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+
+    //遍历包围盒
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
+            Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
+            Vec3 bc = barycentric(a,b,c,p);
+            if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            //深度插值
+            double z = za * bc.x + zb * bc.y + zc * bc.z;
+            int index = x + y * image.width();
+            if (z >= zbuffer[index]) continue;
+            zbuffer[index] = z;
+            
+            //屏幕重心 -> 三维坐标重心
+            Vec3 surface_bc = perspective_correct_barycentric(bc,inv_wa,inv_wb,inv_wc);
+            Vec2 uv = interpolate_uv(uv_a,uv_b,uv_c,surface_bc);
+            TGAColor color;
+            source.get(std::clamp(static_cast<int>(uv.x * source.width()),0,source.width() - 1),std::clamp(static_cast<int>(uv.y * source.height()),0,source.height() - 1),color);
+            const Vec3 normal = interpolate_normal(normal_a_view, normal_b_view,normal_c_view, surface_bc);
+            double intensity = std::clamp(dot(normal,light_direction_view),0.0,1.0);
+            color.b = to_byte(color.b * intensity);
+            color.g = to_byte(color.g * intensity);
+            color.r = to_byte(color.r * intensity);
+            image.set(x,y,color);
+            
+        }
+    }
+}
 
 
 

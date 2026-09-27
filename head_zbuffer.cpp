@@ -38,6 +38,11 @@ namespace{
         return normalized(cross(xyz(bview)-xyz(aview), xyz(cview)-xyz(aview)));
     }
 
+    Vec3 normal_to_view(const Mat4& normalmatrix,const Vec3& normal_local){
+        const Vec4 trans = normalmatrix * Vec4{normal_local.x, normal_local.y, normal_local.z, 0.0};
+        return normalized(xyz(trans));
+    }
+
 
 }
 
@@ -59,6 +64,17 @@ int main(){
     );
     //引入flat shading
     const Mat4 modelview = view * model;
+    //构造normal_to_view矩阵
+    Mat4 linear = identity();
+    for (int i = 0 ; i < 3 ;++i){ //只换左上角非平移部分
+        for (int j = 0 ; j < 3 ;++j){
+            linear.m[i][j] = modelview.m[i][j];
+        }
+    }
+    Mat4 linear_inverse;
+    inverse(linear,linear_inverse);
+    const Mat4 normal_matrix = transpose(linear_inverse);
+
     const Vec3 light_direction_view = normalized(Vec3{0.0, 0.0, 1.0});
 
     const double aspect = static_cast<double>(image.width()) / image.height();
@@ -68,12 +84,11 @@ int main(){
     const Mat4 vp = viewport(image.width(), image.height());
 
     for (const Model::Face& face : object.faces()){
+        //local
         const Vec3 a_local = object.vertices()[face[0].position_index];
         const Vec3 b_local = object.vertices()[face[1].position_index];
         const Vec3 c_local = object.vertices()[face[2].position_index];
 
-        const Vec3 normal_view = facenormal(modelview, a_local, b_local, c_local);
-        const double intensity = std::clamp(dot(light_direction_view,normal_view),0.0,1.0);
 
         const Vec2 a = to_screen(a_local, clip_transform, vp);
         const Vec2 b = to_screen(b_local, clip_transform, vp);
@@ -83,7 +98,7 @@ int main(){
         double a_ndc = ndc(a_local, clip_transform);
         double b_ndc = ndc(b_local, clip_transform);
         double c_ndc = ndc(c_local, clip_transform);
-
+        //uv
         const Vec2 a_uv = object.texcoords()[face[0].texcoord_index];
         const Vec2 b_uv = object.texcoords()[face[1].texcoord_index];
         const Vec2 c_uv = object.texcoords()[face[2].texcoord_index];
@@ -93,13 +108,23 @@ int main(){
         double inv_wb = inv_w(b_local,clip_transform);
         double inv_wc = inv_w(c_local,clip_transform);
 
+        //normal
+        const Vec3 a_normal = object.normal()[face[0].normal_index];
+        const Vec3 b_normal = object.normal()[face[1].normal_index];
+        const Vec3 c_normal = object.normal()[face[2].normal_index];
+        const Vec3 a_normal_view = normal_to_view(normal_matrix,a_normal);
+        const Vec3 b_normal_view = normal_to_view(normal_matrix,b_normal);
+        const Vec3 c_normal_view = normal_to_view(normal_matrix,c_normal);
 
-        triangle_barycentric_uv_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_uv,b_uv,c_uv,intensity,image,source,zbuffer);
-
+        triangle_barycentric_uv_normal_depth(a,b,c,a_ndc,b_ndc,c_ndc,inv_wa,inv_wb,inv_wc,a_uv,b_uv,c_uv,a_normal_view,b_normal_view,c_normal_view,light_direction_view,image,source,zbuffer);
 
         
     }
 
-    image.write("head_uv_flat_shading.tga");
+    image.write("head_uv_normal.tga");
 
 }
+
+
+
+

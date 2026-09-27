@@ -3,6 +3,7 @@
 #include <cmath>
 #include <cassert>
 #include <numbers>
+#include <utility>
 
 struct Vec2 {
     double x = 0.0;
@@ -188,6 +189,58 @@ struct Mat4 {
 
 inline Mat4 identity(){
     return Mat4{{{1.0,0.0,0.0,0.0}, {0.0,1.0,0.0,0.0}, {0.0,0.0,1.0,0.0}, {0.0,0.0,0.0,1.0}}};
+}
+
+//矩阵转置
+inline Mat4 transpose(const Mat4& matrix){
+    Mat4 result{};
+    for (int i = 0 ; i < 4 ;++i){
+        for (int j = 0 ; j < 4 ;++j){
+            result.m[i][j] = matrix.m[j][i];
+        }
+    }
+    return result;
+}
+
+//矩阵求逆
+inline bool inverse(const Mat4& matrix, Mat4& result) {
+    constexpr double epsilon = 1e-12;
+    Mat4 left = matrix;
+    Mat4 right = identity();
+
+    for (int col = 0; col < 4; ++col) {
+        int pivot = col;
+        for (int row = col + 1; row < 4; ++row) {
+            if (std::abs(left.m[row][col]) > std::abs(left.m[pivot][col])) {
+                pivot = row;
+            }
+        }
+        if (std::abs(left.m[pivot][col]) <= epsilon) {
+            return false;
+        }
+
+        for (int j = 0; j < 4; ++j) {
+            std::swap(left.m[col][j], left.m[pivot][j]);
+            std::swap(right.m[col][j], right.m[pivot][j]);
+        }
+
+        const double divisor = left.m[col][col];
+        for (int j = 0; j < 4; ++j) {
+            left.m[col][j] /= divisor;
+            right.m[col][j] /= divisor;
+        }
+
+        for (int row = 0; row < 4; ++row) {
+            if (row == col) continue;
+            const double factor = left.m[row][col];
+            for (int j = 0; j < 4; ++j) {
+                left.m[row][j] -= factor * left.m[col][j];
+                right.m[row][j] -= factor * right.m[col][j];
+            }
+        }
+    }
+    result = right;
+    return true;
 }
 
 

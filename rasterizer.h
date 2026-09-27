@@ -24,3 +24,6 @@ void triangle_barycentric_gradient_depth(const Vec2 &a, const Vec2 &b, const Vec
 
 //uv
 void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,double za,double zb,double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a,const Vec2& uv_b,const Vec2& uv_c,const double intensity,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);
+
+//加入定点法向插值,实现平滑着色
+void triangle_barycentric_uv_normal_depth(const Vec2& a, const Vec2& b, const Vec2& c,double za, double zb, double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a, const Vec2& uv_b, const Vec2& uv_c,const Vec3& normal_a_view,const Vec3& normal_b_view,const Vec3& normal_c_view,const Vec3& light_direction_view,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);
