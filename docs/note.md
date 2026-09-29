@@ -509,6 +509,8 @@ p* - q* = A(p - q).`
 - 实现normal法线插值,渲染版本加入顶点法向用于插值,实现为`triangle_barycentric_uv_normal_depth`
 
 
+# day44
+- 项目整理
 
 
 
