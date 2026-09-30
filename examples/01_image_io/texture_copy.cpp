@@ -1,4 +1,4 @@
-#include "tgaimage.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage source;
@@ -14,6 +14,6 @@ int main(){
         }
     }
 
-    return copy.write("african_head_diffuse_copy.tga") ? 0 : 1;
+    return copy.write("examples/01_image_io/output/african_head_diffuse_copy.tga") ? 0 : 1;
 
 }

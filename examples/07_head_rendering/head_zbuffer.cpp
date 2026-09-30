@@ -1,7 +1,7 @@
-#include "rasterizer.h"
-#include "model.h"
-#include "geometry.h"
-#include "tgaimage.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/model.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/tgaimage.h"
 
 #include <vector>
 #include <limits>
@@ -121,7 +121,7 @@ int main(){
         
     }
 
-    image.write("head_uv_normal.tga");
+    image.write("examples/07_head_rendering/output/head_uv_normal.tga");
 
 }
 

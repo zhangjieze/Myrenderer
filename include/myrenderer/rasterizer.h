@@ -1,6 +1,6 @@
 #pragma once
-#include "tgaimage.h"
-#include "geometry.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/geometry.h"
 #include <vector>
 
 void line_dda(int x0, int y0, int x1, int y1, TGAImage& image, const TGAColor& color);

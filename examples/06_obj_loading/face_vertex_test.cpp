@@ -1,8 +1,8 @@
-#include "model.h"
+#include "myrenderer/model.h"
 #include <iostream>
 
 int main(){
-    Model model("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
+    Model model("assets/models/african_head.obj");
     const auto& vertices = model.vertices();
     const auto& faces = model.faces();
     std::cout << "v cnt : " << vertices.size() << std::endl;

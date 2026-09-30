@@ -1,6 +1,6 @@
-#include "tgaimage.h"
-#include "geometry.h"
-#include "rasterizer.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/rasterizer.h"
 
 int main(){
     TGAImage image(100,100);
@@ -55,5 +55,5 @@ int main(){
     );
 
 
-    image.write("look_at.tga");
+    image.write("examples/04_transformations/output/look_at.tga");
 }

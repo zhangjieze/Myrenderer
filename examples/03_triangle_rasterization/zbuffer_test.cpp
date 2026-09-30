@@ -1,6 +1,6 @@
 #include <iostream>
-#include "tgaimage.h"
-#include "rasterizer.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/rasterizer.h"
 #include <vector>
 #include <limits>
 
@@ -27,5 +27,5 @@ int main(){
         image, zbuffer, green
     );
 
-    image.write("triangle_barycentric_depth.tga");
+    image.write("examples/03_triangle_rasterization/output/triangle_barycentric_depth.tga");
 }

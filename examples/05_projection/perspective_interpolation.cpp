@@ -2,9 +2,9 @@
 #include <numbers>
 #include <vector>
 
-#include "geometry.h"
-#include "rasterizer.h"
-#include "tgaimage.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage image(100,100);
@@ -48,5 +48,5 @@ int main(){
     Vec4 c_screen = vp * Vec4{c_ndc.x, c_ndc.y, c_ndc.z, 1.0};
 
     triangle_barycentric_gradient_depth(xy(a_screen), xy(b_screen), xy(c_screen),a_ndc.z, b_ndc.z, c_ndc.z,1.0 / a_clip.w,1.0 / b_clip.w,1.0 / c_clip.w,red, green, blue,image, zbuffer);
-    image.write("perspective_gradient.tga");
+    image.write("examples/05_projection/output/perspective_gradient.tga");
 }

@@ -3,9 +3,9 @@
 #include <limits>
 #include <vector>
 
-#include "geometry.h"
-#include "rasterizer.h"
-#include "tgaimage.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage image(100,100);
@@ -69,7 +69,7 @@ int main(){
     Vec2 cm22 = xy(cm2screen);
     //使用第二种变换model2
     triangle_barycentric_depth(am22, bm22, cm22, am2screen.z, bm2screen.z, cm2screen.z, image, zbuffer, green);
-    image.write("NDC_MODEL_MATRIX.tga");
+    image.write("examples/04_transformations/output/NDC_MODEL_MATRIX.tga");
     
 }
 

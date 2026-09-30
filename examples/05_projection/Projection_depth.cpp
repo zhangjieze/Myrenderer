@@ -3,9 +3,9 @@
 #include <vector>
 
 
-#include "geometry.h"
-#include "tgaimage.h"
-#include "rasterizer.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/rasterizer.h"
 
 
 int main(){
@@ -66,7 +66,7 @@ int main(){
 
     triangle_barycentric_depth(xy(a_far),xy(b_far),xy(c_far),a_far.z,b_far.z,c_far.z,image,zbuffer,blue);
 
-    image.write("projection_depth.tga");
+    image.write("examples/05_projection/output/projection_depth.tga");
 
 
 

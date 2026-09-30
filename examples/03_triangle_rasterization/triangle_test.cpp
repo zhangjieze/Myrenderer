@@ -1,6 +1,6 @@
 #include <iostream>
-#include "tgaimage.h"
-#include "rasterizer.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/rasterizer.h"
 #include <vector>
 #include <limits>
 
@@ -34,5 +34,5 @@ int main(){
         image, zbuffer
     );
 
-    image.write("triangle_gradient_depth.tga");
+    image.write("examples/03_triangle_rasterization/output/triangle_gradient_depth.tga");
 }

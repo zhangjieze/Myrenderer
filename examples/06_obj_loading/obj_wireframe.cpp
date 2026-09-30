@@ -1,9 +1,9 @@
 #include <numbers>
 
-#include "geometry.h"
-#include "model.h"
-#include "tgaimage.h"
-#include "rasterizer.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/model.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/rasterizer.h"
 
 namespace{
     Vec2 to_screen(const Vec3& local_p,const Mat4& clip_transform,const Mat4& vp){
@@ -18,7 +18,7 @@ namespace{
 int main(){
     TGAImage image(800,800);
     TGAColor white{255,255,255};
-    Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
+    Model object("assets/models/african_head.obj");
 
 
     Mat4 model = identity();
@@ -45,7 +45,7 @@ int main(){
             white
         );
     }
-    image.write("obj_wireframe.tga");
+    image.write("examples/06_obj_loading/output/obj_wireframe.tga");
 
     
 

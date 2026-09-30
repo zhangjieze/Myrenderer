@@ -1,4 +1,4 @@
-#include "tgaimage.h"
+#include "myrenderer/tgaimage.h"
 #include <cstdint>
 #include <fstream>
 #include <array>

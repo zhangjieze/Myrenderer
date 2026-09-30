@@ -1,7 +1,7 @@
 #include <numbers>
-#include "tgaimage.h"
-#include "rasterizer.h"
-#include "geometry.h"
+#include "myrenderer/tgaimage.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/geometry.h"
 
 int main(){
 	TGAImage image(400,300);
@@ -57,7 +57,7 @@ int main(){
 
     triangle_wireframe(static_cast<int>(afar.x),static_cast<int>(afar.y),static_cast<int>(bfar.x),static_cast<int>(bfar.y),static_cast<int>(cfar.x),static_cast<int>(cfar.y),image,blue);
 
-    image.write("Projectin_matrix.tga");
+    image.write("examples/05_projection/output/Projectin_matrix.tga");
 
 
 }

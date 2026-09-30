@@ -3,9 +3,9 @@
 #include <limits>
 #include <vector>
 
-#include "geometry.h"
-#include "rasterizer.h"
-#include "tgaimage.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage image(100,100);
@@ -59,7 +59,7 @@ int main(){
     Vec2 cu = xy(c_up);
     triangle_barycentric_filled(au, bu, cu, image, green);
 
-    image.write("view_matirx_translation.tga");
+    image.write("examples/04_transformations/output/view_matirx_translation.tga");
     
     
 }

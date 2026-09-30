@@ -1,4 +1,4 @@
-#include "model.h"
+#include "myrenderer/model.h"
 #include <cassert>
 #include <fstream>
 #include <sstream>

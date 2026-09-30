@@ -1,6 +1,6 @@
 #include <iostream>
-#include "rasterizer.h"
-#include "tgaimage.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage image(100,100);
@@ -15,6 +15,6 @@ int main(){
     line_bresenham(40, 90, 10, 10, image, blue);   // 高斜率反向
     line_bresenham(90, 90, 10, 20, image, red);    // 反向混合
     line_bresenham(50, 50, 50, 50, image, blue);   // 单点
-    image.write("bresenham_final_test.tga");
+    image.write("examples/02_basic_rasterization/line_rasterization/output/bresenham_final_test.tga");
     return 0;
 }

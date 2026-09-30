@@ -1,8 +1,8 @@
 #include <numbers>
 
-#include "geometry.h"
-#include "rasterizer.h"
-#include "tgaimage.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/tgaimage.h"
 
 int main(){
     TGAImage image(100,100);
@@ -48,7 +48,7 @@ int main(){
 
     
     
-    image.write("view_matirx_rotation.tga");
+    image.write("examples/04_transformations/output/view_matirx_rotation.tga");
     
     
 }
