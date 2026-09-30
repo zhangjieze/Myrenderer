@@ -1,6 +1,6 @@
-# MyRenderer conclusion
+# MyRenderer
 
-一个使用 C++ 实现的 CPU 软件光栅器,用于从底层理解并实践经典实时渲染管线.
+一个使用 C++ 实现的 CPU 软件光栅器,用于从底层理解并实践经典光栅化渲染管线.
 
 本项目的学习路线受到 [TinyRenderer](https://github.com/ssloy/tinyrenderer) 启发.
 第一次接触 TinyRenderer 时,我能够理解整体渲染流程并实现最终效果,但其中的数学库、模型读取、图像 IO 等部分仍然在很大程度上作为黑盒使用,同时大量渲染逻辑集中在单个函数中.
@@ -53,7 +53,7 @@ TGA Image
 ```
 
 当前主程序使用 African Head 模型进行测试,实现了纹理映射以及基于顶点法线插值的平滑 Lambert 着色.
-输出结果在为app/output/head_uv_normal.tga.
+输出结果为app/output/head_uv_normal.tga.
 项目使用 CMake 进行构建,需要支持 C++20 的编译器,项目根目录运行:
 ```
 cmake -S . -B build
@@ -158,7 +158,7 @@ Myrenderer/
 - examples/:开发过程中各阶段的实验代码与渲染结果
 - docs/learning_notes.md:实现过程中对数学原理、图形学概念以及代码设计的详细记录
 
-随着项目逐步进行,部分接口和约定发生过变化,早期 example 保留了当时的代码形式,并不保证能够直接使用当前版本的接口重新编译.完整的实现过程与相关推导记录在learning_notes.md.
+随着项目逐步进行,部分接口和约定发生过变化,早期 example 保留了当时的代码形式,并不保证能够直接使用当前版本的接口重新编译.完整的实现过程与相关推导记录在[`docs/learning_notes.md`](docs/learning_notes.md).
 
 
 
@@ -167,7 +167,8 @@ Myrenderer/
 
 
 ## Reference
-ssloy/tinyrenderer
+
+- [ssloy/tinyrenderer](https://github.com/ssloy/tinyrenderer)
 
 
 
