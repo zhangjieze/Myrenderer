@@ -1,7 +1,7 @@
-#include "rasterizer.h"
-#include "model.h"
-#include "geometry.h"
-#include "tgaimage.h"
+#include "myrenderer/rasterizer.h"
+#include "myrenderer/model.h"
+#include "myrenderer/geometry.h"
+#include "myrenderer/tgaimage.h"
 
 #include <vector>
 #include <limits>
@@ -50,9 +50,9 @@ int main(){
     TGAImage image(800,800);
     //const TGAColor white{255, 255, 255}; 已用flat shading取代
     TGAImage source;
-    if (!source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga")) return 1;
+    if (!source.read("assets/textures/african_head_diffuse.tga")) return 1;
 
-    Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
+    Model object("assets/models/african_head.obj");
 
     std::vector<double> zbuffer(image.width() * image.height(),std::numeric_limits<double>::infinity());
 
@@ -121,7 +121,7 @@ int main(){
         
     }
 
-    image.write("head_uv_normal.tga");
+    image.write("app/output/head_uv_normal.tga");
 
 }
 
