@@ -2,7 +2,7 @@
 
 int main(){
     TGAImage source;
-    source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga");
+    source.read("assets/textures/african_head_diffuse.tga");
 
     TGAImage copy(source.width(),source.height());
 
