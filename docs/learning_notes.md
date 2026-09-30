@@ -3,7 +3,7 @@
 
 # day1
 实现geometry.h的初步效果:
-- 实现最小线性代数层：Vec2 / Vec3 / ==Vec4==
+- 实现最小线性代数层：Vec2 / Vec3 / `Vec4`
 - 实现基本代数运算: 点积(dot),叉积(cross),范数(norm),单位化(normalized)
 - 需要特别注意，vec4的第四个维度一般不在规范化考虑范围中，一般是属性的样子，所以vec4有特别的normalized_xyz.
 
@@ -16,10 +16,12 @@
     screen_y = (ndc_y + 1.0) * height / 2.0;
     z和w需保持不变
     w必须保持为1，设置的viewport矩阵为:
+```
     [width/2,0,0,width/2]
     [0,height/2,0,height/2]
     [0,0,1,0]
     [0,0,0,1]
+```
 
 # day3
 1. 实现translation矩阵，可以实现点的平移，是不改变方向的，这里方向不要理解为点的位置向量，指的是两个点之间的差D = B - A，经过平移后两个点之间的差向量是不会因为点的平移改变的。
@@ -32,16 +34,19 @@ non-uniform scale：改变点的位置，也可能改变差向量方向
 
 # day5
 1. 实现rotation旋转，绕z轴逆时针旋转，旋转矩阵为:
+```
     [ cos  -sin   0   0 ]
     [ sin   cos   0   0 ]
     [ 0      0    1   0 ]
     [ 0      0    0   1 ]
-    同理可以实现绕x,y轴旋转,不过注意在绕y轴时因使用右手系,旋转矩阵为:
+```
+同理可以实现绕x,y轴旋转,不过注意在绕y轴时因使用右手系,旋转矩阵为:
+```
     [ cos   0   sin   0 ]
     [ 0     1    0    0 ]
     [-sin   0   cos   0 ]
     [ 0     0    0    1 ]
-
+```
 2. 理解变换组合逻辑:顺序其实就是左边的变换矩阵对列向量做的空间的仿射变换,仿射变换的顺序直接对仿射变换的结果影响
 
 ---
@@ -389,6 +394,7 @@ v    1.2    3.4    5.6
 - 更新tgaimage,实现`get`,get: pixels_[index/index+1/index+2] -> color.b/g/r,为`set`镜像,set: color.b/g/r -> pixels_[index/index+1/index+2]
 - **实现`read`**
 tga格式文件格式为:
+```
 ┌──────────────────────┐
 │ TGA Header           │  18 bytes
 ├──────────────────────┤
@@ -400,6 +406,7 @@ tga格式文件格式为:
 │ Pixel Data           │
 │ Pixel Data           │
 └──────────────────────┘
+```
 
 header用于存头18bytes内容.
 
@@ -408,6 +415,7 @@ header用于存头18bytes内容.
 - 读取完需要检查input,检查是否因为header长度不够18byte而读取失败 `if(!input) return false;`
 
 - 接下来解释 TGA Header,以下为tga header的含义
+```
 | 字节位置    | 含义                |
 | ------- | ----------------- |
 | `0`     | Image ID 长度       |
@@ -418,6 +426,7 @@ header用于存头18bytes内容.
 | `14~15` | 图片高度              |
 | `16`    | 每像素多少 bit         |
 | `17`    | Image Descriptor  |
+```
 
 - header[0]记录ImageID的长度,后面用于跳过
 - header[1]记录是否使用调色板,也就是Color Mapped Image,不过这里只使用简单BGR不进行颜色编号映射,后期如果对颜色有要求可选,此处仅支持color_map_type == 0.
@@ -441,11 +450,13 @@ tips: 不直接写`pixels_ = pixels;`,因为这样会涉及拷贝,.swap直接交
 # day37
 read读取RLE Image实现.
 - RLE采用数据包(packet)格式,packet 开头有一个 1 字节的 packet_header,其内容为:
+```
 ┌──────────┬─────────────────────┐
 │ bit 7    │ bit 6 ~ bit 0       │
 ├──────────┼─────────────────────┤
 │ 类型       packet像素量 - 1
 └──────────┴─────────────────────┘
+```
 最高bit如果为`1`说明这个这个是RLE packet,是0则说明这是Raw packet.
 
 - `packet_header & 0x7f`把最高位 bit7 清零,只留下低 7 位(packet像素数量-1),因此+1即可算出packet描述的像素数量.
