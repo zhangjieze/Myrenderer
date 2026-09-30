@@ -24,6 +24,21 @@
 
 ## Current Result
 
+目前效果展示:
+<table>
+  <tr>
+    <td align="center">
+      <img src="examples/07_head_rendering/output/head_uv_flat_shading.png" width="400"><br>
+      <b>Flat Shading</b>
+    </td>
+    <td align="center">
+      <img src="examples/07_head_rendering/output/head_uv_normal.png" width="400"><br>
+      <b>Smooth Shading</b>
+    </td>
+  </tr>
+</table>
+
+
 当前版本已经能够完成:
 
 ```text
