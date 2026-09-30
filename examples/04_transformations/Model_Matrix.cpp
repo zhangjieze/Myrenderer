@@ -1,3 +1,8 @@
+/*
+后续补充:
+同zbuffer_test,未引入标准透视投影和 NDC 深度.
+*/
+
 #include <cassert>
 #include <cmath>
 #include <limits>
