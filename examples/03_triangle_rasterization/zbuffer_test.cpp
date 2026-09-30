@@ -1,3 +1,13 @@
+/*
+后续补充:
+此时尚未引入标准透视投影和 NDC 深度,本阶段约定 z 值越大表示距离相机越近,因此 Z-buffer 初始化为负无穷.
+后续加入 Projection Matrix 后改为 NDC 深度约定:即z 越小越近
+当前 rasterizer 的深度测试规则已与此阶段不同.
+*/
+
+
+
+
 #include <iostream>
 #include "myrenderer/tgaimage.h"
 #include "myrenderer/rasterizer.h"

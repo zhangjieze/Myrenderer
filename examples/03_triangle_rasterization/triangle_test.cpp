@@ -1,3 +1,13 @@
+/*
+后续补充:
+历史阶段代码：此时三角形属性仍直接使用屏幕重心坐标进行插值,尚未引入透视校正插值，因此本文件调用的是早期版本的光栅化接口.
+后续在加入 Projection Matrix 后,引入每个顶点的 1/w进行矫正,此处为历史快照.
+当前 rasterizer 接口已与此阶段不同,详细演进过程见 docs/learning_notes.md.
+*/
+
+
+
+
 #include <iostream>
 #include "myrenderer/tgaimage.h"
 #include "myrenderer/rasterizer.h"

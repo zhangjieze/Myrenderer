@@ -1,3 +1,8 @@
+/*
+原因同face_vertex_test一样,此时未引入纹理和法线,Face接口有问题.
+*/
+
+
 #include <numbers>
 
 #include "myrenderer/geometry.h"

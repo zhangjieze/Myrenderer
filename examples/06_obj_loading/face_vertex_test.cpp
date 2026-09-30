@@ -1,3 +1,11 @@
+/*
+此时 OBJ 的 Face (array<int,3>)只保存顶点位置索引,因此可以直接使用 face[i] 访问 vertices.
+后续为了支持纹理坐标 vt 和顶点法线 vn，引入了 FaceVertex,
+当前 Face 已同时保存 position/texcoord/normal 三类索引，接口因此发生变化.
+*/
+
+
+
 #include "myrenderer/model.h"
 #include <iostream>
 

@@ -50,9 +50,9 @@ int main(){
     TGAImage image(800,800);
     //const TGAColor white{255, 255, 255}; 已用flat shading取代
     TGAImage source;
-    if (!source.read("/Users/mac/Desktop/Myrenderer/obj/african_head_diffuse.tga")) return 1;
+    if (!source.read("assets/textures/african_head_diffuse.tga")) return 1;
 
-    Model object("/Users/mac/Desktop/Myrenderer/obj/african_head.obj");
+    Model object("assets/models/african_head.obj");
 
     std::vector<double> zbuffer(image.width() * image.height(),std::numeric_limits<double>::infinity());
 
