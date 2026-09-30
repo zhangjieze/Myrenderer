@@ -494,6 +494,14 @@ while 还没有填满整张图片(pixel_index < pixel_cnt):
 # day41 (uv插值)
 - 实现triangle_barycentric_uv_depth,结合三维重心坐标对uv坐标进行插值
 
+前后效果比较:
+<p align="center">
+  <img src="../examples/07_head_rendering/output/head_uv_try.png" width="420">
+</p>
+
+<p align="center">
+  <img src="../examples/07_head_rendering/output/head_uv_flat_shading.png" width="420">
+</p>
 
 # day42 (obj法线提取)
 - 结合uv纹理采样以及Lambert 漫反射光照,实现为head_uv_flat_shading,不过很明显,三角形之间明暗差异很大,因为现在是以一个三角形为一个整体进行Lambert漫反射的.
