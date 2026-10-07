@@ -125,6 +125,6 @@ int main(){
         
     }
 
-    image.write("08_specular_lighting/output/head_specular_lighting.tga");
+    image.write("examples/08_specular_lighting/output/head_specular_lighting.tga");
 
 }

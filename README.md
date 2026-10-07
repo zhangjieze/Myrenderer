@@ -17,6 +17,7 @@
 - OBJ 模型解析
 - UV 纹理映射
 - 法线变换与平滑着色
+- Lambert 漫反射与 Blinn-Phong 镜面高光
 
 目前项目仍在持续进行中.
 
@@ -28,12 +29,16 @@
 <table>
   <tr>
     <td align="center">
-      <img src="examples/07_head_rendering/output/head_uv_flat_shading.png" width="400"><br>
+      <img src="examples/07_head_rendering/output/head_uv_flat_shading.png" width="300"><br>
       <b>Flat Shading</b>
     </td>
     <td align="center">
-      <img src="examples/07_head_rendering/output/head_uv_normal.png" width="400"><br>
+      <img src="examples/07_head_rendering/output/head_uv_normal.png" width="300"><br>
       <b>Smooth Shading</b>
+    </td>
+    <td align="center">
+      <img src="examples/08_specular_lighting/output/head_specular_lighting.png" width="300"><br>
+      <b>Blinn-Phong Specular Lighting</b>
     </td>
   </tr>
 </table>
@@ -60,15 +65,17 @@ Perspective-Correct Interpolation
     ↓
 Z-Buffer
     ↓
-UV Sampling + Normal Interpolation
+UV Sampling
     ↓
-Lambert Shading
+Normal + View-Space Position Interpolation
+    ↓
+Lambert Diffuse + Blinn-Phong Specular Lighting
     ↓
 TGA Image
 ```
 
-当前主程序使用 African Head 模型进行测试,实现了纹理映射以及基于顶点法线插值的平滑 Lambert 着色.
-输出结果为app/output/head_uv_normal.tga.
+当前主程序使用 African Head 模型进行测试，在透视校正的 UV 与法线插值基础上实现了逐像素 Lambert 漫反射，进一步插值 View Space 中的表面位置以计算观察方向，通过 Blinn–Phong 模型加入镜面高光.
+
 项目使用 CMake 进行构建,需要支持 C++20 的编译器,项目根目录运行:
 ```
 cmake -S . -B build
@@ -108,6 +115,25 @@ cmake --build build
 - 顶点法线插值
 - 透视校正属性插值
 透视投影后颜色、UV、法线等表面属性不能直接使用屏幕空间重心坐标进行线性插值,因此通过每个顶点的 $1/w$ 对插值权重进行校正.
+
+
+## Lighting
+
+目前实现了基础的逐像素光照计算:
+
+- Lambert漫反射
+- View Space 中的表面位置插值
+- Blinn-Phong specular lighting
+
+当前镜面高光采用固定材质参数:
+
+- shininess exponent: 32
+- specular strength: 0.35
+- specular color: white
+
+镜面反射项为: s = max(0.0,N.H)^p,其中H为半程向量 H = (L + V) / ||L + V||
+当前版本不同表面区域共享相同的高光参数.
+
 
 
 ## Model Loading
@@ -157,7 +183,8 @@ Myrenderer/
 │   ├── 04_transformations/
 │   ├── 05_projection/
 │   ├── 06_obj_loading/
-│   └── 07_head_rendering/
+│   ├── 07_head_rendering/
+│   └── 08_specular_lighting/
 │  
 │
 ├── docs/
@@ -181,8 +208,9 @@ Myrenderer/
 ## Roadmap
 接下来计划继续完善 Renderer 的结构与渲染管线,项目的目标不是追求成熟图形 API 的功能规模,而是通过自行实现关键模块,建立对经典 Rasterization管线的完整理解.
 
-目前working on:
-- Specular lighting / Blinn-Phong shading
+下一步规划:
+目前函数参数已经爆炸,下一步阶段性整理,实现光栅化与片元着色阶段解耦
+
 
 
 ## Reference
