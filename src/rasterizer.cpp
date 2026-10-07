@@ -357,6 +357,52 @@ void triangle_barycentric_uv_normal_depth(const Vec2& a, const Vec2& b, const Ve
     }
 }
 
+//引入specular_lighting
+void triangle_barycentric_uv_normal_depth_specular(const Vec2& a, const Vec2& b, const Vec2& c,double za, double zb, double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a, const Vec2& uv_b, const Vec2& uv_c,const Vec3& normal_a_view,const Vec3& normal_b_view,const Vec3& normal_c_view,const Vec3& a_view,const Vec3& b_view,const Vec3& c_view,const Vec3& light_direction_view,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer){
+    BoundingBox box = triangle_bounding_box(a,b,c,image); //包围盒
+    const double ps = 32.0; //高光指数
+    const double specular_strength = 0.35; //高光强度系数
+
+    //遍历包围盒
+    for (int y = box.min_y; y <= box.max_y;++y){
+        for (int x = box.min_x; x <= box.max_x;++x){
+            Vec2 p{static_cast<double>(x),static_cast<double>(y)}; //当前点
+            Vec3 bc = barycentric(a,b,c,p);
+            if (bc.x < 0 || bc.y < 0 || bc.z < 0) continue;
+            //深度插值
+            double z = za * bc.x + zb * bc.y + zc * bc.z;
+            int index = x + y * image.width();
+            if (z >= zbuffer[index]) continue;
+            zbuffer[index] = z;
+            
+            //屏幕重心 -> 三维坐标重心
+            Vec3 surface_bc = perspective_correct_barycentric(bc,inv_wa,inv_wb,inv_wc);
+            Vec2 uv = interpolate_uv(uv_a,uv_b,uv_c,surface_bc);
+            TGAColor color;
+            source.get(std::clamp(static_cast<int>(uv.x * source.width()),0,source.width() - 1),std::clamp(static_cast<int>(uv.y * source.height()),0,source.height() - 1),color);
+            const Vec3 normal = interpolate_normal(normal_a_view, normal_b_view,normal_c_view, surface_bc);//插值法向量
+            double intensity = std::clamp(dot(normal,light_direction_view),0.0,1.0); //漫反射强度
+            
+            const Vec3 position_view = a_view * surface_bc.x + b_view * surface_bc.y + c_view * surface_bc.z; //插值相机空间点的位置
+            const Vec3 view_direction = normalized(position_view * -1.0); //得到指向相机的方向V
+            double specular = 0.0;
+            const Vec3 half = light_direction_view + view_direction; //得到未归一化的半程向量H
+            //处理非法条件,使得:强度大于0,观察者在法线朝向的一侧,L+V不能为0
+            if (intensity > 0.0 && dot(normal, view_direction) > 0.0 && norm(half) > 1e-12){
+                const Vec3 half_vector = normalized(half);
+                const double alignment = std::clamp(dot(normal, half_vector), 0.0, 1.0);
+                specular = std::pow(alignment, ps);
+            }
+            const double highlight = 255.0 * specular_strength * specular;
+            
+            color.b = to_byte(color.b * intensity + highlight);
+            color.g = to_byte(color.g * intensity + highlight);
+            color.r = to_byte(color.r * intensity + highlight);
+            image.set(x,y,color);
+            
+        }
+    }
+}
 
 
 

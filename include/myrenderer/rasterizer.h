@@ -27,3 +27,6 @@ void triangle_barycentric_uv_depth(const Vec2& a,const Vec2& b,const Vec2& c,dou
 
 //加入定点法向插值,实现平滑着色
 void triangle_barycentric_uv_normal_depth(const Vec2& a, const Vec2& b, const Vec2& c,double za, double zb, double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a, const Vec2& uv_b, const Vec2& uv_c,const Vec3& normal_a_view,const Vec3& normal_b_view,const Vec3& normal_c_view,const Vec3& light_direction_view,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);
+
+//引入specular_lighting
+void triangle_barycentric_uv_normal_depth_specular(const Vec2& a, const Vec2& b, const Vec2& c,double za, double zb, double zc,double inv_wa, double inv_wb, double inv_wc,const Vec2& uv_a, const Vec2& uv_b, const Vec2& uv_c,const Vec3& normal_a_view,const Vec3& normal_b_view,const Vec3& normal_c_view,const Vec3& a_view,const Vec3& b_view,const Vec3& c_view,const Vec3& light_direction_view,TGAImage& image,const TGAImage& source,std::vector<double>& zbuffer);
