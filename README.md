@@ -180,6 +180,9 @@ Myrenderer/
 ## Roadmap
 接下来计划继续完善 Renderer 的结构与渲染管线,项目的目标不是追求成熟图形 API 的功能规模,而是通过自行实现关键模块,建立对经典 Rasterization管线的完整理解.
 
+目前working on:
+- Specular lighting / Blinn-Phong shading
+
 
 ## Reference
 
